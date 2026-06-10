@@ -1,0 +1,17 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.1",
+  "main": "./src/index.ts",
+  "scripts": {
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.30.0",
+    "postgres": "^3.4.4"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.21.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Database: PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: high-traffic-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: high_traffic_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - high-traffic-network
+
+  # Cache & Queue: Redis
+  redis:
+    image: redis:7-alpine
+    container_name: high-traffic-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - high-traffic-network
+
+  # (Optional) Redis Insight for UI management
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    container_name: high-traffic-redis-ui
+    ports:
+      - "8001:8001"
+    networks:
+      - high-traffic-network
+
+networks:
+  high-traffic-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,81 @@
+import { pgTable, serial, text, timestamp, varchar, integer, decimal, pgEnum, uuid } from "drizzle-orm/pg-core";
+
+// Enums for Status Management
+export const userRoleEnum = pgEnum("user_role", ["admin", "client", "dj"]);
+export const eventStatusEnum = pgEnum("event_status", ["pending", "confirmed", "completed", "cancelled"]);
+export const rentalStatusEnum = pgEnum("rental_status", ["pending", "out_for_delivery", "returned", "damaged"]);
+
+// 1. Users Table (Admin, Client, DJ)
+export const users = pgTable("users", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  phone: varchar("phone", { length: 20 }),
+  role: userRoleEnum("role").default("client").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 2. Equipment Table (For Rental Service)
+export const equipment = pgTable("equipment", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  category: varchar("category", { length: 100 }).notNull(), // e.g., 'Mixer', 'Speaker', 'Lighting'
+  description: text("description"),
+  dailyRate: decimal("daily_rate", { precision: 10, scale: 2 }).notNull(),
+  totalStock: integer("total_stock").default(1).notNull(),
+  availableStock: integer("available_stock").default(1).notNull(),
+  imageUrl: text("image_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 3. Events Table (DJ Booking Service)
+export const events = pgTable("events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  clientId: uuid("client_id").references(() => users.id).notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  location: text("location").notNull(),
+  eventDate: timestamp("event_date").notNull(),
+  status: eventStatusEnum("status").default("pending").notNull(),
+  budget: decimal("budget", { precision: 12, scale: 2 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 4. Rental Orders Table
+export const rentalOrders = pgTable("rental_orders", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  clientId: uuid("client_id").references(() => users.id).notNull(),
+  eventId: uuid("event_id").references(() => events.id), // Optional: link rental to an event
+  status: rentalStatusEnum("status").default("pending").notNull(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  totalPrice: decimal("total_price", { precision: 12, scale: 2 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 5. Rental Items (Many-to-Many relationship between Order and Equipment)
+export const rentalItems = pgTable("rental_items", {
+  id: serial("id").primaryKey(),
+  orderId: uuid("order_id").references(() => rentalOrders.id).notNull(),
+  equipmentId: integer("equipment_id").references(() => equipment.id).notNull(),
+  quantity: integer("quantity").default(1).notNull(),
+});
+
+// 6. Reviews Table
+export const reviews = pgTable("reviews", {
+  id: serial("id").primaryKey(),
+  authorId: uuid("author_id").references(() => users.id).notNull(),
+  targetEventId: uuid("event_id").references(() => events.id),
+  targetEquipmentId: integer("equipment_id").references(() => equipment.id),
+  rating: integer("rating").notNull(), // 1-5
+  comment: text("comment"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 7. System Configs Table (For Feature Flags & Menu Management)
+export const systemConfigs = pgTable("system_configs", {
+  key: varchar("key", { length: 100 }).primaryKey(), // e.g., 'menu_rental_visible'
+  value: text("value").notNull(), // 'true' or 'false'
+  description: text("description"),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
