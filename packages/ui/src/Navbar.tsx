@@ -20,12 +20,8 @@ export const Navbar = ({ logo }: { logo?: string }) => {
     <nav className="fixed top-0 w-full z-50 px-8 h-24 flex items-center justify-between pointer-events-none">
       {/* Logo Area */}
       <div className="flex items-center gap-3 pointer-events-auto">
-        <div className="w-10 h-10 bg-white flex items-center justify-center">
-           <div className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[20px] border-b-black" />
-        </div>
-        <div className="text-[10px] leading-tight font-bold text-white uppercase tracking-tighter">
+        <div className="text-[20px] font-display leading-tight font-bold text-white uppercase tracking-tighter">
           Klipse
-          <span className="block font-normal text-[8px] mt-1 text-zinc-500">크리에이티브그룹아더</span>
         </div>
       </div>
 
