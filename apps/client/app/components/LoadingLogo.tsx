@@ -4,14 +4,14 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 
 export default function LoadingLogo() {
-  // Clearer, more readable letter forms for KLIPSE
+  // Clearer, more readable letter forms for klipse
   const paths = [
-    "M 20 20 L 20 80 M 20 50 L 50 20 M 20 50 L 50 80", // K
-    "M 80 20 L 80 80 L 120 80",                         // L
-    "M 140 20 L 140 80",                               // I
-    "M 170 80 L 170 20 L 200 20 Q 220 20 220 50 Q 220 80 200 80 L 170 80", // P
-    "M 260 20 Q 230 20 230 50 Q 230 80 260 80 Q 280 80 280 65 Q 280 50 260 50 Q 240 50 240 35 Q 240 20 260 20", // S
-    "M 300 20 L 300 80 L 340 80 M 300 50 L 330 50 M 300 20 L 340 20"  // E
+    "M 20 20 L 20 80 M 20 50 L 40 50 L 20 80", // k
+    "M 70 20 L 70 80",                         // l
+    "M 100 40 L 100 80",                       // i
+    "M 130 80 L 130 40 Q 150 40 150 60 Q 150 80 130 80", // p
+    "M 190 80 Q 160 80 160 60 Q 160 40 190 40 Q 210 40 210 55 Q 210 70 190 70", // s
+    "M 240 60 Q 240 40 260 40 Q 280 40 280 60 Q 280 80 260 80 Q 240 80 240 60"  // e
   ];
 
   const containerVariants = {
