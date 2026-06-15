@@ -32,6 +32,7 @@ const HERO_SLIDES = [
 const ScrollBackground = dynamic(() => import('./components/ScrollBackground'), {
   ssr: false,
 });
+
 // 휠 스크롤에 따라 색상이 회색에서 흰색으로 1:1로 변하는 단어 컴포넌트
 const ScrollColorWord = ({ text, scrollYProgress, start, end }: { text: string; scrollYProgress: any; start: number; end: number }) => {
   // 스크롤 진행률에 따라 색상을 회색(#3f3f46)에서 흰색(#ffffff)으로 1:1 매핑
