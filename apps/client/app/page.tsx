@@ -103,28 +103,24 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, 10000);
     return () => clearInterval(timer);
-  }, [isLoaded]);
+  import LoadingLogo from './components/LoadingLogo';
 
-  return (
-    <div className="relative">
-      {/* Splash Overlay */}
-      <div 
-        className={`fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center transition-opacity duration-700 ${
-          isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`} 
-      >
-        <div className="w-64 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-primary transition-all duration-75 ease-linear"
-            style={{ width: `${progress}%` }}
-          />
+  // ... (rest of the code remains the same)
+
+    return (
+      <div className="relative">
+        {/* Splash Overlay */}
+        <div 
+          className={`fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center transition-opacity duration-700 ${
+            isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`} 
+        >
+          <LoadingLogo />
         </div>
-        <div className="text-[10px] text-zinc-500 mt-4 tracking-[0.2em] uppercase font-bold">{Math.floor(progress)}%</div>
-      </div>
 
-      <main className={`min-h-screen bg-background text-foreground transition-all duration-1000 ${
-        isLoaded ? 'opacity-100' : 'opacity-0'
-      }`}>
+        <main className={`min-h-screen bg-background text-foreground transition-all duration-1000 ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}>
         <section className="relative h-screen flex items-center justify-center overflow-hidden py-20 md:py-32 bg-gradient-to-b from-background to-secondary/20">
           {/* Background Video */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
