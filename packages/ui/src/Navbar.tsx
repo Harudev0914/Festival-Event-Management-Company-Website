@@ -24,7 +24,7 @@ export const Navbar = ({ logo }: { logo?: string }) => {
            <div className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[20px] border-b-black" />
         </div>
         <div className="text-[10px] leading-tight font-bold text-white uppercase tracking-tighter">
-          Creative<br />Group<br />Arthur
+          Klipse
           <span className="block font-normal text-[8px] mt-1 text-zinc-500">크리에이티브그룹아더</span>
         </div>
       </div>
