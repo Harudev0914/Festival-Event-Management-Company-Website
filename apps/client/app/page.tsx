@@ -5,6 +5,8 @@ import { APP_NAME, DEFAULT_TICKER_DATA } from "@repo/common";
 import { Heading, Text, Button, Card, AnimatedCounter, CountdownTimer, BannerCarousel } from "@repo/ui";
 import { motion, AnimatePresence, Variants, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import dynamic from 'next/dynamic';
+import LoadingLogo from './components/LoadingLogo';
 
 const HERO_SLIDES = [
   {
@@ -28,6 +30,7 @@ const HERO_SLIDES = [
 ];
 
 import dynamic from 'next/dynamic';
+import LoadingLogo from './components/LoadingLogo';
 
 const ScrollBackground = dynamic(() => import('./components/ScrollBackground'), {
   ssr: false,
@@ -103,24 +106,22 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, 10000);
     return () => clearInterval(timer);
-  import LoadingLogo from './components/LoadingLogo';
+  }, [isLoaded]);
 
-  // ... (rest of the code remains the same)
+  return (
+    <div className="relative">
+      {/* Splash Overlay */}
+      <div 
+        className={`fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center transition-opacity duration-700 ${
+          isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`} 
+      >
+        <LoadingLogo />
+      </div>
 
-    return (
-      <div className="relative">
-        {/* Splash Overlay */}
-        <div 
-          className={`fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center transition-opacity duration-700 ${
-            isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`} 
-        >
-          <LoadingLogo />
-        </div>
-
-        <main className={`min-h-screen bg-background text-foreground transition-all duration-1000 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}>
+      <main className={`min-h-screen bg-background text-foreground transition-all duration-1000 ${
+        isLoaded ? 'opacity-100' : 'opacity-0'
+      }`}>
         <section className="relative h-screen flex items-center justify-center overflow-hidden py-20 md:py-32 bg-gradient-to-b from-background to-secondary/20">
           {/* Background Video */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -189,7 +190,7 @@ export default function Home() {
                   </motion.div>
 
                   <motion.div variants={item} className="flex justify-center gap-4">
-                    <Button variant="outline" className="px-8 md:px-12 py-2 md:py-3 uppercase tracking-widest font-bold bg-transparent hover:bg-white hover:text-black transition-all text-sm md:text-base">
+                    <Button variant="outline" className="px-8 md:px-12 py-2 md:py-3 uppercase tracking-widest font-bold bg-transparent border border-white text-white hover:bg-white hover:text-black transition-all text-sm md:text-base">
                       {HERO_SLIDES[currentSlide].buttonText}
                     </Button>
                   </motion.div>
