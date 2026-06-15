@@ -4,14 +4,14 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 
 export default function LoadingLogo() {
-  // More accurate letter forms
+  // Clearer, more readable letter forms for KLIPSE
   const paths = [
     "M 20 20 L 20 80 M 20 50 L 50 20 M 20 50 L 50 80", // K
-    "M 70 20 L 70 80 L 100 80",                         // L
-    "M 120 20 L 120 80 M 120 20 L 150 20 M 120 80 L 150 80 M 135 20 L 135 80", // I
-    "M 170 80 L 170 20 L 200 20 Q 215 20 215 50 Q 215 80 200 80 L 170 80", // P
-    "M 260 20 Q 230 20 230 50 Q 230 80 260 80 Q 280 80 280 65 Q 280 50 260 50 Q 240 50 240 35 Q 240 20 260 20", // S
-    "M 300 20 L 300 80 L 340 80 M 300 50 L 330 50 M 300 20 L 340 20"  // E
+    "M 70 20 L 70 80 L 110 80",                         // L
+    "M 130 20 L 130 80",                               // I
+    "M 160 80 L 160 20 L 190 20 Q 210 20 210 50 Q 210 80 190 80 L 160 80", // P
+    "M 250 20 L 220 20 Q 210 20 210 35 Q 210 50 240 50 Q 260 50 260 65 Q 260 80 250 80 L 220 80", // S
+    "M 280 20 L 280 80 L 320 80 M 280 50 L 310 50 M 280 20 L 320 20"  // E
   ];
 
   const containerVariants = {
@@ -34,7 +34,7 @@ export default function LoadingLogo() {
   return (
     <div className="flex items-center justify-center w-full h-full bg-black">
       <motion.svg
-        viewBox="0 0 360 100"
+        viewBox="0 0 350 100"
         className="w-80 h-auto"
         variants={containerVariants}
         initial="hidden"
@@ -46,7 +46,7 @@ export default function LoadingLogo() {
             d={path}
             fill="transparent"
             stroke="white"
-            strokeWidth="3"
+            strokeWidth="4"
             strokeLinecap="round"
             strokeLinejoin="round"
             variants={pathVariants}
