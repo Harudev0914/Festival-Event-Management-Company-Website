@@ -1,43 +1,23 @@
 "use client";
 
 import * as React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-export type MenuConfig = {
-  about?: boolean;
-  howToUse?: boolean;
-  rental?: boolean;
-  construction?: boolean;
-  portfolio?: boolean;
-  magazine?: boolean;
-};
-
-export const Navbar = ({ 
-  logo, 
-  config = { 
-    about: true, 
-    howToUse: true, 
-    rental: false, // Default hidden as requested
-    construction: true, 
-    portfolio: true, 
-    magazine: true 
-  } 
-}: { 
-  logo: string; 
-  config?: MenuConfig 
-}) => {
+export const Navbar = ({ logo }: { logo?: string }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const menuItems = [
-    { id: 'about', name: "소개", href: "/about" },
-    { id: 'howToUse', name: "이용방법", href: "/guide" },
-    { id: 'rental', name: "렌탈", href: "/rental" },
-    { id: 'construction', name: "시공", href: "/construction" },
-    { id: 'portfolio', name: "포트폴리오", href: "/portfolio" },
-    { id: 'magazine', name: "매거진", href: "/magazine" },
-  ].filter(item => config[item.id as keyof MenuConfig]);
+    { name: "COMPANY", kr: "회사 소개", href: "/about" },
+    { name: "CONSTRUCTION", kr: "시공", href: "/construction" },
+    { name: "RENTAL", kr: "렌탈", href: "/rental" },
+    { name: "DJ", kr: "DJ", href: "/dj" },
+    { name: "LOCATION", kr: "오시는길", href: "/location" },
+    { name: "CONTACT", kr: "문의", href: "/contact" },
+    { name: "PARTNERSHIP", kr: "입점 문의", href: "/partnership" },
+  ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-transparent px-8 h-24 flex items-center justify-between pointer-events-none">
+    <nav className="fixed top-0 w-full z-50 px-8 h-24 flex items-center justify-between pointer-events-none">
       {/* Logo Area */}
       <div className="flex items-center gap-3 pointer-events-auto">
         <div className="w-10 h-10 bg-white flex items-center justify-center">
@@ -51,40 +31,77 @@ export const Navbar = ({
 
       {/* Menu Trigger */}
       <button 
-        className="flex items-center gap-3 text-white pointer-events-auto group"
+        className="flex items-center gap-3 text-white pointer-events-auto group bg-black/20 backdrop-blur-md px-4 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-300"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Menu</span>
         <div className="space-y-1">
-          <div className="w-5 h-[2px] bg-white" />
-          <div className="w-5 h-[2px] bg-white" />
-          <div className="w-5 h-[2px] bg-white" />
+          <motion.div 
+            animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+            className="w-5 h-[1.5px] bg-current" 
+          />
+          <motion.div 
+            animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+            className="w-5 h-[1.5px] bg-current" 
+          />
+          <motion.div 
+            animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+            className="w-5 h-[1.5px] bg-current" 
+          />
         </div>
       </button>
 
-      {/* Mobile/Full Menu Overlay (Simplified for now) */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-background/95 z-[60] flex items-center justify-center p-12 pointer-events-auto">
-          <button 
-            className="absolute top-8 right-8 text-white"
-            onClick={() => setIsOpen(false)}
+      {/* Full Menu Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-background z-[100] flex flex-col items-center justify-center pointer-events-auto backdrop-blur-3xl"
           >
-            CLOSE
-          </button>
-          <div className="flex flex-col gap-6 text-center">
-            {menuItems.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                className="text-4xl font-display font-bold text-white hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.name}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+            <button 
+              className="absolute top-10 right-10 text-white flex items-center gap-2 group"
+              onClick={() => setIsOpen(false)}
+            >
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-50 group-hover:opacity-100 transition-opacity">Close</span>
+              <div className="relative w-6 h-6 flex items-center justify-center">
+                <div className="absolute w-6 h-[1.5px] bg-white rotate-45" />
+                <div className="absolute w-6 h-[1.5px] bg-white -rotate-45" />
+              </div>
+            </button>
+
+            <div className="flex flex-col gap-4 md:gap-8 items-center">
+              {menuItems.map((item, index) => (
+                <motion.div
+                  key={item.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + index * 0.05 }}
+                  className="group relative flex flex-col items-center"
+                >
+                  <a
+                    href={item.href}
+                    className="text-4xl md:text-7xl font-display font-bold text-zinc-600 hover:text-white transition-all duration-500 uppercase tracking-tighter"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                  <span className="text-xs md:text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                    {item.kr}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Backdrop decorative text */}
+            <div className="absolute bottom-10 left-10 opacity-5">
+               <span className="text-[15vw] font-display font-bold text-white whitespace-nowrap pointer-events-none uppercase">Creative Arthur</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

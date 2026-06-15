@@ -18,8 +18,6 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@repo/common": ["../../packages/common/src/index.ts"],
-      "@repo/db": ["../../packages/db/src/index.ts"]
     }
   }
 }
