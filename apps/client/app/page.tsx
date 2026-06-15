@@ -3,7 +3,7 @@
 import * as React from "react";
 import { APP_NAME, DEFAULT_TICKER_DATA } from "@repo/common";
 import { Heading, Text, Button, Card, AnimatedCounter, CountdownTimer, BannerCarousel } from "@repo/ui";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const HERO_SLIDES = [
