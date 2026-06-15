@@ -5,13 +5,14 @@ import { motion } from 'framer-motion';
 
 export default function LoadingLogo() {
   // Clearer, more readable letter forms for KLIPSE
+  // Clearer, more readable letter forms for KLIPSE
   const paths = [
     "M 20 20 L 20 80 M 20 50 L 50 20 M 20 50 L 50 80", // K
-    "M 80 20 L 80 80 L 120 80",                         // L
-    "M 140 20 L 140 80",                               // I
-    "M 170 80 L 170 20 L 200 20 Q 220 20 220 50 Q 220 80 200 80 L 170 80", // P
-    "M 260 20 Q 230 20 230 40 Q 230 60 260 60 Q 280 60 280 80 Q 280 100 250 100", // S
-    "M 300 20 L 300 80 L 340 80 M 300 50 L 330 50 M 300 20 L 340 20"  // E
+    "M 80 20 L 80 80 L 130 80",                         // L
+    "M 150 20 L 150 80",                               // I
+    "M 180 80 L 180 20 L 210 20 Q 230 20 230 50 Q 230 80 210 80 L 180 80", // P
+    "M 270 20 Q 240 20 240 40 Q 240 60 270 60 Q 290 60 290 80 Q 290 100 260 100", // S
+    "M 310 20 L 310 80 L 350 80 M 310 50 L 340 50 M 310 20 L 350 20"  // E
   ];
 
   const containerVariants = {
