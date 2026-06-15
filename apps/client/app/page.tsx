@@ -27,31 +27,29 @@ const HERO_SLIDES = [
   }
 ];
 
-// Helper to split text into characters for fine-grained animation
-const CharacterFill = ({ text, scrollYProgress, start, end }: { text: string; scrollYProgress: any; start: number; end: number }) => {
-  const chars = text.split("");
-  
+import dynamic from 'next/dynamic';
+
+const ScrollBackground = dynamic(() => import('./components/ScrollBackground'), {
+  ssr: false,
+});
+
+// 휠 스크롤에 따라 색상이 회색에서 흰색으로 1:1로 변하는 단어 컴포넌트
+const ScrollColorWord = ({ text, scrollYProgress, start, end }: { text: string; scrollYProgress: any; start: number; end: number }) => {
+  // 스크롤 진행률에 따라 색상을 회색(#3f3f46)에서 흰색(#ffffff)으로 1:1 매핑
+  const color = useTransform(
+    scrollYProgress,
+    [start, end],
+    ["#3f3f46", "#ffffff"]
+  );
+
   return (
-    <div className="flex justify-center">
-      {chars.map((char, i) => {
-        // Range for this character: offset the start to ensure it doesn't trigger at 0
-        const charStart = start + (end - start) * (i / chars.length);
-        const charEnd = start + (end - start) * ((i + 1) / chars.length);
-        
-        // Add a larger buffer to the start to ensure it doesn't trigger prematurely
-        const color = useTransform(
-          scrollYProgress, 
-          [charStart + 0.15, charEnd + 0.15], 
-          ["#3f3f46", "#ffffff"],
-          { clamp: true }
-        );
-        
-        return (
-          <motion.span key={i} style={{ color }} className="inline-block font-display">
-            {char}
-          </motion.span>
-        );
-      })}
+    <div className="w-full text-center px-4">
+      <motion.p
+        style={{ color }}
+        className="font-display text-3xl sm:text-5xl md:text-7xl lg:text-[6rem] font-bold leading-tight tracking-tighter uppercase"
+      >
+        {text}
+      </motion.p>
     </div>
   );
 };
@@ -61,10 +59,11 @@ export default function Home() {
   const [progress, setProgress] = React.useState(0);
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
-  const sectionRef = React.useRef(null);
+  // 컨테이너 스크롤 감지를 위한 Ref
+  const containerRef = React.useRef(null);
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "center center"]
+    target: containerRef,
+    offset: ["start start", "end end"]
   });
 
   const container = {
@@ -85,23 +84,16 @@ export default function Home() {
   };
 
   React.useEffect(() => {
-    // Simplified progress logic
     const start = Date.now();
     const duration = 2500;
-    
     const updateProgress = () => {
       const now = Date.now();
       const elapsed = now - start;
       const p = Math.min((elapsed / duration) * 100, 100);
       setProgress(p);
-
-      if (elapsed < duration) {
-        requestAnimationFrame(updateProgress);
-      } else {
-        setIsLoaded(true);
-      }
+      if (elapsed < duration) requestAnimationFrame(updateProgress);
+      else setIsLoaded(true);
     };
-    
     requestAnimationFrame(updateProgress);
   }, []);
 
@@ -156,7 +148,6 @@ export default function Home() {
               transition={{ duration: 1 }}
               className="absolute inset-0 z-10 flex items-center justify-center"
             >
-              {/* Spectral Artist Backdrop - Behind ALL Text */}
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9, y: 40 }}
                 animate={{ opacity: 0.7, scale: 0.9, y: 0 }}
@@ -210,30 +201,22 @@ export default function Home() {
               </div>
             </motion.div>
           </AnimatePresence>
-
-          {/* Slide Indicators */}
-          <div className="absolute bottom-6 md:bottom-10 right-6 md:right-10 z-30 flex gap-3">
-            {HERO_SLIDES.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentSlide(i)}
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  i === currentSlide 
-                    ? "bg-white w-8 md:w-12" 
-                    : "bg-white/20 w-2 md:w-3 hover:bg-white/40"
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* Scroll Indicator (Vertical) */}
-          <div className="absolute bottom-10 left-10 flex flex-col items-center gap-4 opacity-50 animate-pulse">
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase vertical-text [writing-mode:vertical-rl]">Scroll Down</span>
-            <div className="w-[1px] h-16 bg-white" />
-          </div>
+{/* Horizontal Circular Slide Indicators */}
+<div className="absolute top-1/2 left-10 -translate-y-1/2 z-50 flex flex-col gap-4 pointer-events-auto">
+  {HERO_SLIDES.map((_, i) => (
+    <button
+      key={i}
+      onClick={() => setCurrentSlide(i)}
+      className={`h-10 w-1 rounded-full transition-all duration-500 ${
+        i === currentSlide 
+          ? "bg-white scale-100" 
+          : "bg-white/20 hover:bg-white/50 hover:scale-105"
+      }`}
+    />
+  ))}
+</div>
         </section>
 
-        {/* Marquee Ticker Overlapping Hero */}
         <section className="relative -mt-20 z-30 pointer-events-none">
           <div className="w-full bg-[#1A1A1A] border-y border-[#c5a059] py-6 overflow-hidden -rotate-2 transform scale-110">
             <motion.div 
@@ -256,31 +239,32 @@ export default function Home() {
         </section>
 
         {/* 5. Construction / Rental / Festival Section */}
-        <section ref={sectionRef} className="h-[300vh] relative">
-          <div className="sticky top-0 h-screen flex flex-col items-center justify-center bg-black text-white overflow-hidden px-6">
-            <div className="w-full max-w-5xl flex flex-col items-center justify-center gap-8 md:gap-16">
-              {["Construction", "Rental", "Festival"].map((text, i) => (
-                <div key={text} className="text-5xl sm:text-7xl md:text-[8rem] font-display font-bold leading-tight tracking-tighter uppercase text-center w-full">
-                  <CharacterFill 
-                    text={text} 
-                    scrollYProgress={scrollYProgress} 
-                    start={i * 0.25} // Narrower range to ensure it starts when inside
-                    end={i * 0.25 + 0.2} 
-                  />
-                </div>
-              ))}
+        <section ref={containerRef} className="h-[300vh] relative">
+          <div className="sticky top-0 h-screen flex flex-col items-center justify-center bg-black px-6">
+            <div className="absolute inset-0 z-0">
+              <ScrollBackground />
+            </div>
+            <div className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-8">
+              <ScrollColorWord text="CONSTRUCTION" scrollYProgress={scrollYProgress} start={0.3} end={0.45} />
+              <ScrollColorWord text="RENTAL" scrollYProgress={scrollYProgress} start={0.45} end={0.6} />
+              <ScrollColorWord text="FESTIVAL" scrollYProgress={scrollYProgress} start={0.6} end={0.75} />
             </div>
           </div>
         </section>
 
-        {/* 6. Construction Portfolio Section */}
-        <section className="min-h-screen bg-background py-32 px-6">
+        {/* 6. Construction Portfolio Section - Hidden
+        <section className="min-h-screen bg-black py-32 px-6">
           <div className="max-w-7xl mx-auto">
-            <div className="mb-20">
-              <Text className="text-accent font-bold tracking-[0.3em] uppercase text-sm mb-4">Our Projects</Text>
-              <Heading level={2} className="text-5xl md:text-8xl font-display font-bold uppercase tracking-tighter text-white">
-                Construction<br />Portfolio
-              </Heading>
+            <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+              <div>
+                <Text className="text-accent font-bold tracking-[0.3em] uppercase text-sm mb-4">Our Projects</Text>
+                <Heading level={2} className="text-5xl md:text-8xl font-display font-bold uppercase tracking-tighter text-white">
+                  Construction<br />Portfolio
+                </Heading>
+              </div>
+              <Button className="px-10 py-6 text-lg uppercase tracking-[0.2em] bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white hover:text-black transition-all duration-300 rounded-full shadow-lg text-white">
+                문의 하기
+              </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -295,19 +279,22 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.2 }}
-                  className="group cursor-pointer"
+                  className="group relative"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-4">
-                    <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-3xl mb-6">
+                    <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80" />
+                    <div className="absolute bottom-6 left-6">
+                      <Text className="text-white font-bold text-2xl mb-1">{item.title}</Text>
+                      <Text className="text-accent uppercase tracking-widest text-xs">{item.type}</Text>
+                    </div>
                   </div>
-                  <Text className="text-white font-bold text-xl">{item.title}</Text>
-                  <Text className="text-zinc-500 uppercase tracking-widest text-xs">{item.type}</Text>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
+        */}
       </main>
     </div>
   );

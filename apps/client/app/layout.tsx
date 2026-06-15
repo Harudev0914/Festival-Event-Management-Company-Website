@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.className} bg-background`}>
         <CustomCursor />
-        <Navbar logo="BEAT & RENTAL" />
+        <Navbar logo="Klipse" />
         <FloatingContact />
         <main>
           {children}
