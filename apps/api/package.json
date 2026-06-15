@@ -8,7 +8,8 @@
     "dev": "nest start --watch --entryFile src/main",
     "dev:safe": "npm run build && nest start --watch --entryFile src/main",
     "start:debug": "nest start --debug --watch --entryFile src/main",
-    "start:prod": "node dist/apps/api/src/main"
+    "start:prod": "node dist/apps/api/src/main",
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/bullmq": "^10.1.1",

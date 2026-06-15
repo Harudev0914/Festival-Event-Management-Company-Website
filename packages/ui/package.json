@@ -4,6 +4,10 @@
   "private": true,
   "main": "./src/index.tsx",
   "types": "./src/index.tsx",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit"
+  },
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"

@@ -34,12 +34,14 @@ export const Button = ({
   children, 
   onClick, 
   variant = "primary",
-  fullWidth = false 
+  fullWidth = false,
+  className = ""
 }: { 
   children: React.ReactNode; 
   onClick?: () => void; 
   variant?: "primary" | "secondary" | "outline" | "ghost";
   fullWidth?: boolean;
+  className?: string;
 }) => {
   const baseStyles = "px-6 py-3 rounded-full font-medium transition-all active:scale-95 flex items-center justify-center gap-2";
   const variants = {
@@ -52,7 +54,7 @@ export const Button = ({
   return (
     <button 
       onClick={onClick} 
-      className={`${baseStyles} ${variants[variant]} ${fullWidth ? "w-full" : ""} `}
+      className={`${baseStyles} ${variants[variant]} ${fullWidth ? "w-full" : ""} ${className}`}
     >
       {children}
     </button>

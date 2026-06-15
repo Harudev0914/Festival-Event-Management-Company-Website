@@ -3,7 +3,7 @@
 import * as React from "react";
 import { APP_NAME, DEFAULT_TICKER_DATA } from "@repo/common";
 import { Heading, Text, Button, Card, AnimatedCounter, CountdownTimer, BannerCarousel } from "@repo/ui";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { motion, AnimatePresence, Variants, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const HERO_SLIDES = [
@@ -27,10 +27,45 @@ const HERO_SLIDES = [
   }
 ];
 
+// Helper to split text into characters for fine-grained animation
+const CharacterFill = ({ text, scrollYProgress, start, end }: { text: string; scrollYProgress: any; start: number; end: number }) => {
+  const chars = text.split("");
+  
+  return (
+    <div className="flex justify-center">
+      {chars.map((char, i) => {
+        // Range for this character: offset the start to ensure it doesn't trigger at 0
+        const charStart = start + (end - start) * (i / chars.length);
+        const charEnd = start + (end - start) * ((i + 1) / chars.length);
+        
+        // Add a larger buffer to the start to ensure it doesn't trigger prematurely
+        const color = useTransform(
+          scrollYProgress, 
+          [charStart + 0.15, charEnd + 0.15], 
+          ["#3f3f46", "#ffffff"],
+          { clamp: true }
+        );
+        
+        return (
+          <motion.span key={i} style={{ color }} className="inline-block font-display">
+            {char}
+          </motion.span>
+        );
+      })}
+    </div>
+  );
+};
+
 export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
   const [currentSlide, setCurrentSlide] = React.useState(0);
+
+  const sectionRef = React.useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "center center"]
+  });
 
   const container = {
     hidden: { opacity: 0 },
@@ -45,7 +80,7 @@ export default function Home() {
     visible: { 
       opacity: 1, 
       y: 0, 
-      transition: { duration: 0.8, ease: "easeOut" } 
+      transition: { duration: 0.8, ease: "easeOut" as const } 
     }
   };
 
@@ -123,16 +158,16 @@ export default function Home() {
             >
               {/* Spectral Artist Backdrop - Behind ALL Text */}
               <motion.div 
-                initial={{ opacity: 0, scale: 1.1, y: 40 }}
-                animate={{ opacity: 0.7, scale: 1.25, y: 0 }}
-                exit={{ opacity: 0, scale: 1.3, y: -20 }}
+                initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                animate={{ opacity: 0.7, scale: 0.9, y: 0 }}
+                exit={{ opacity: 0, scale: 1.0, y: -20 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
                 className="absolute inset-0 flex items-end justify-center z-0 pointer-events-none"
               >
                 <img 
                   src={HERO_SLIDES[currentSlide].artist} 
                   alt="Artist"
-                  className="h-[80vh] md:h-[120vh] w-auto object-contain object-bottom mix-blend-lighten grayscale brightness-150"
+                  className="h-[70vh] md:h-[100vh] w-auto object-contain object-bottom mix-blend-lighten grayscale brightness-150"
                 />
               </motion.div>
 
@@ -198,111 +233,81 @@ export default function Home() {
           </div>
         </section>
 
-            {/* Marquee Ticker Overlapping Hero */}
-          <section className="relative -mt-20 z-30 pointer-events-none">
-            <div className="w-full bg-[#1A1A1A] border-y border-[#c5a059] py-6 overflow-hidden -rotate-2 transform scale-110">
-              <motion.div 
-                className="flex whitespace-nowrap"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-              >
-                {[...Array(10)].map((_, i) => (
-                  <div key={i} className="flex gap-20 px-10 text-[#c5a059] font-bold text-sm tracking-widest uppercase font-display items-center">
-                    {DEFAULT_TICKER_DATA.map((item, index) => (
-                      <div key={index} className="flex flex-col gap-1">
-                        <span>{item.line1}</span>
-                        <span>{item.line2}</span>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-          </section>
-
-          {/* 5. DJ Lineup & Schedule Section */}
-          <section className="py-32 bg-background relative overflow-hidden">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                <div className="space-y-4">
-                  <Text className="text-accent font-bold tracking-[0.3em] uppercase text-sm">Artist Lineup</Text>
-                  <Heading level={2} className="text-5xl md:text-7xl uppercase tracking-tighter font-display">
-                    DJ SCHEDULE <br /> 2026 SEASON
-                  </Heading>
+        {/* Marquee Ticker Overlapping Hero */}
+        <section className="relative -mt-20 z-30 pointer-events-none">
+          <div className="w-full bg-[#1A1A1A] border-y border-[#c5a059] py-6 overflow-hidden -rotate-2 transform scale-110">
+            <motion.div 
+              className="flex whitespace-nowrap"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+            >
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="flex gap-20 px-10 text-[#c5a059] font-bold text-sm tracking-widest uppercase font-display items-center">
+                  {DEFAULT_TICKER_DATA.map((item, index) => (
+                    <div key={index} className="flex col gap-1">
+                      <span>{item.line1}</span>
+                      <span>{item.line2}</span>
+                    </div>
+                  ))}
                 </div>
-                <Button variant="outline" className="border-white/10 hover:bg-white hover:text-black transition-all group">
-                  View All Artists <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  {
-                    name: "DJ KROME",
-                    genre: "TECHNO / INDUSTRIAL",
-                    image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?q=80&w=1000&auto=format&fit=crop",
-                    schedule: [
-                      { date: "JUN 20", event: "MIDNIGHT CITY FESTIVAL" },
-                      { date: "JUN 25", event: "CLUB CHROMA SEOUL" },
-                    ]
-                  },
-                  {
-                    name: "DJ VIRTUE",
-                    genre: "PROGRESSIVE HOUSE",
-                    image: "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=1000&auto=format&fit=crop",
-                    schedule: [
-                      { date: "JUN 22", event: "ULTRA SEOUL 2026" },
-                      { date: "JUL 01", event: "WAVE MUSIC FESTIVAL" },
-                    ]
-                  },
-                  {
-                    name: "DJ ECHO",
-                    genre: "TRAP / HIP-HOP",
-                    image: "https://images.unsplash.com/photo-1601643157091-ce5c665179ab?q=80&w=1000&auto=format&fit=crop",
-                    schedule: [
-                      { date: "JUN 18", event: "UNDERGROUND SESSION" },
-                      { date: "JUN 29", event: "NEON GARDEN PARTY" },
-                    ]
-                  }
-                ].map((dj, i) => (
-                  <motion.div 
-                    key={dj.name}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group"
-                  >
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-2xl mb-6">
-                      <img 
-                        src={dj.image} 
-                        alt={dj.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
-                      <div className="absolute bottom-6 left-6">
-                        <div className="text-[10px] font-bold tracking-widest text-accent mb-1 uppercase">{dj.genre}</div>
-                        <Heading level={3} className="text-3xl uppercase font-display">{dj.name}</Heading>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      {dj.schedule.map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between py-3 border-b border-white/5 hover:border-accent/30 transition-colors group/item">
-                          <div className="flex gap-4 items-center">
-                            <span className="text-xs font-bold text-zinc-500 tabular-nums">{item.date}</span>
-                            <span className="text-sm font-medium text-white group-hover/item:text-accent transition-colors">{item.event}</span>
-                          </div>
-                          <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/item:opacity-100 transition-opacity" />
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+        {/* 5. Construction / Rental / Festival Section */}
+        <section ref={sectionRef} className="h-[300vh] relative">
+          <div className="sticky top-0 h-screen flex flex-col items-center justify-center bg-black text-white overflow-hidden px-6">
+            <div className="w-full max-w-5xl flex flex-col items-center justify-center gap-8 md:gap-16">
+              {["Construction", "Rental", "Festival"].map((text, i) => (
+                <div key={text} className="text-5xl sm:text-7xl md:text-[8rem] font-display font-bold leading-tight tracking-tighter uppercase text-center w-full">
+                  <CharacterFill 
+                    text={text} 
+                    scrollYProgress={scrollYProgress} 
+                    start={i * 0.25} // Narrower range to ensure it starts when inside
+                    end={i * 0.25 + 0.2} 
+                  />
+                </div>
+              ))}
             </div>
-          </section>
+          </div>
+        </section>
 
+        {/* 6. Construction Portfolio Section */}
+        <section className="min-h-screen bg-background py-32 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-20">
+              <Text className="text-accent font-bold tracking-[0.3em] uppercase text-sm mb-4">Our Projects</Text>
+              <Heading level={2} className="text-5xl md:text-8xl font-display font-bold uppercase tracking-tighter text-white">
+                Construction<br />Portfolio
+              </Heading>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                { title: "Lounge Bar", type: "Interior", img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800&auto=format&fit=crop" },
+                { title: "Festival Stage", type: "Structure", img: "https://images.unsplash.com/photo-1470229722910-72e5ef0b6f9a?q=80&w=800&auto=format&fit=crop" },
+                { title: "Club Sound System", type: "Audio", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800&auto=format&fit=crop" },
+              ].map((item, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.2 }}
+                  className="group cursor-pointer"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-4">
+                    <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+                  </div>
+                  <Text className="text-white font-bold text-xl">{item.title}</Text>
+                  <Text className="text-zinc-500 uppercase tracking-widest text-xs">{item.type}</Text>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
