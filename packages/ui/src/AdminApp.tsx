@@ -1,12 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { MainVisualManager } from './MainVisualManager';
-import { 
-  LayoutDashboard, Users, Hammer, Calendar, Music, 
-  ImageIcon, FileText, Newspaper, FileCheck, 
-  ClipboardList, Settings, ChevronDown, ChevronUp, X, Menu, Instagram, Youtube
-} from 'lucide-react';
+import MainVisualManager from './MainVisualManager';
+import { LayoutDashboard } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { Hammer } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+import { Music } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { Newspaper } from 'lucide-react';
+import { FileCheck } from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
+import { X } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import { Instagram } from 'lucide-react';
+import { Youtube } from 'lucide-react';
 
 function Dashboard() {
   return (
