@@ -38,14 +38,12 @@ export const CustomCursor = () => {
   return (
     <motion.div
       className="fixed top-0 left-0 z-[9999] rounded-full border border-white pointer-events-none mix-blend-difference hidden md:block"
-      style={{
-        cursor: 'none',
-      }}
       animate={{ 
         width: isHovered ? 48 : 32, 
         height: isHovered ? 48 : 32 
       }}
       style={{
+        cursor: 'none',
         x: cursorX,
         y: cursorY,
       }}

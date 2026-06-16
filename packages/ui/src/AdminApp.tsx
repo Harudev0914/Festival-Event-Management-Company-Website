@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MainVisualManager } from './MainVisualManager';
+import MainVisualManager from './MainVisualManager';
 import { 
   LayoutDashboard, Users, Hammer, Calendar, Music, 
   Image as ImageIcon, FileText, Newspaper, FileCheck, 
