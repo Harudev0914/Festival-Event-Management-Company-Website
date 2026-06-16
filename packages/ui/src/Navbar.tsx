@@ -5,6 +5,25 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export const Navbar = ({ logo }: { logo?: string }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  // Scroll lock effect
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const menuItems = [
     { name: "COMPANY", kr: "회사 소개", href: "/about" },
@@ -17,20 +36,20 @@ export const Navbar = ({ logo }: { logo?: string }) => {
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 px-8 h-24 flex items-center justify-between pointer-events-none">
+    <nav className={`fixed top-0 w-full z-50 px-4 md:px-12 h-20 md:h-24 flex items-center justify-between transition-all duration-300 pointer-events-none ${isScrolled ? 'bg-black/80 backdrop-blur-md' : ''}`}>
       {/* Logo Area */}
       <div className="flex items-center gap-3 pointer-events-auto">
-        <div className="text-[20px] font-display leading-tight font-bold text-white uppercase tracking-tighter">
+        <a href="/" className="text-xl md:text-2xl font-display leading-tight font-bold text-white uppercase tracking-tighter hover:text-primary transition-colors">
           Klipse
-        </div>
+        </a>
       </div>
 
       {/* Menu Trigger */}
       <button 
-        className="flex items-center gap-3 text-white pointer-events-auto group bg-black/20 backdrop-blur-md px-4 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-300"
+        className="flex items-center gap-3 text-white pointer-events-auto group bg-black/20 backdrop-blur-md px-5 py-2.5 rounded-full hover:bg-white hover:text-black transition-all duration-300"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Menu</span>
+        <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Menu</span>
         <div className="space-y-1">
           <motion.div 
             animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
@@ -55,20 +74,20 @@ export const Navbar = ({ logo }: { logo?: string }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-background z-[100] flex flex-col items-center justify-center pointer-events-auto backdrop-blur-3xl"
+            className="fixed inset-0 bg-background z-[100] flex flex-col items-center justify-center pointer-events-auto backdrop-blur-3xl px-6"
           >
             <button 
-              className="absolute top-10 right-10 text-white flex items-center gap-2 group"
+              className="absolute top-8 right-8 md:top-10 md:right-10 text-white flex items-center gap-2 group"
               onClick={() => setIsOpen(false)}
             >
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-50 group-hover:opacity-100 transition-opacity">Close</span>
+              <span className="text-[11px] font-bold tracking-[0.2em] uppercase opacity-50 group-hover:opacity-100 transition-opacity">Close</span>
               <div className="relative w-6 h-6 flex items-center justify-center">
                 <div className="absolute w-6 h-[1.5px] bg-white rotate-45" />
                 <div className="absolute w-6 h-[1.5px] bg-white -rotate-45" />
               </div>
             </button>
 
-            <div className="flex flex-col gap-4 md:gap-8 items-center">
+            <div className="flex flex-col gap-2 md:gap-4 items-center w-full">
               {menuItems.map((item, index) => (
                 <motion.div
                   key={item.name}
@@ -79,12 +98,13 @@ export const Navbar = ({ logo }: { logo?: string }) => {
                 >
                   <a
                     href={item.href}
-                    className="text-4xl md:text-7xl font-display font-bold text-zinc-600 hover:text-white transition-all duration-500 uppercase tracking-tighter"
+                    className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-bold text-zinc-600 hover:text-white transition-all duration-500 uppercase tracking-tighter leading-none"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
                   </a>
-                  <span className="text-xs md:text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+
+                  <span className="text-[10px] md:text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 mt-1">
                     {item.kr}
                   </span>
                 </motion.div>

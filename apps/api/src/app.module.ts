@@ -11,6 +11,7 @@ import { loggerConfig } from './logger.config';
 import { AuditLogMiddleware } from './audit-log.middleware';
 import { AuthModule } from './auth/auth.module';
 import { AdminConfigController } from './admin/admin-config.controller';
+import { AnalyticsController } from './analytics.controller';
 
 @Module({
   imports: [
@@ -45,7 +46,7 @@ import { AdminConfigController } from './admin/admin-config.controller';
       name: 'mail-queue',
     }),
   ],
-  controllers: [AppController, AdminConfigController],
+  controllers: [AppController, AdminConfigController, AnalyticsController],
   providers: [AppService, MailProcessor],
 })
 export class AppModule implements NestModule {

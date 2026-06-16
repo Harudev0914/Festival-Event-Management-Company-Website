@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, Body, UseGuards, Param, Post } from '@nestjs/common';
 import { db, systemConfigs } from '@repo/db';
 import { eq } from 'drizzle-orm';
 // import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Assume guard exists
@@ -8,33 +8,43 @@ import { eq } from 'drizzle-orm';
 @Controller('admin/config')
 export class AdminConfigController {
   
-  @Get('menu')
-  async getMenuConfig() {
-    const configs = await db.select().from(systemConfigs);
-    // Transform to object for easier consumption
-    return configs.reduce((acc, curr) => {
-      acc[curr.key] = curr.value === 'true';
-      return acc;
-    }, {});
+  // Generic GET to fetch any config
+  @Get(':key')
+  async getConfig(@Param('key') key: string) {
+    const [config] = await db
+      .select()
+      .from(systemConfigs)
+      .where(eq(systemConfigs.key, key));
+    
+    if (!config) return { key, value: null };
+    
+    // Attempt to parse JSON if possible, otherwise return raw string
+    try {
+      return { key, value: JSON.parse(config.value) };
+    } catch {
+      return { key, value: config.value };
+    }
   }
 
-  @Patch('menu')
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles('admin')
-  async updateMenuConfig(@Body() body: Record<string, boolean>) {
-    for (const [key, value] of Object.entries(body)) {
-      await db
-        .insert(systemConfigs)
-        .values({ 
-          key, 
-          value: String(value),
-          updatedAt: new Date()
-        })
-        .onConflictDoUpdate({
-          target: systemConfigs.key,
-          set: { value: String(value), updatedAt: new Date() },
-        });
-    }
+  // Generic POST to update any config
+  @Post(':key')
+  async updateConfig(@Param('key') key: string, @Body() body: { value: any }) {
+    const valueString = typeof body.value === 'object' 
+      ? JSON.stringify(body.value) 
+      : String(body.value);
+
+    await db
+      .insert(systemConfigs)
+      .values({ 
+        key, 
+        value: valueString,
+        updatedAt: new Date()
+      })
+      .onConflictDoUpdate({
+        target: systemConfigs.key,
+        set: { value: valueString, updatedAt: new Date() },
+      });
+      
     return { success: true };
   }
 }

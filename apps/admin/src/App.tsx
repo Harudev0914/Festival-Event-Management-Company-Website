@@ -1,122 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from 'react';
+import { MainVisualManager } from './MainVisualManager';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function Dashboard() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">분석 대시보드</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">섹션별 체류 시간</h3>
+          <p className="text-3xl font-bold text-gray-900">0.0s</p>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">진입/이탈 플로우</h3>
+          <p className="text-sm text-gray-600">데이터 로딩 중...</p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">주요 이탈 지점</h3>
+          <p className="text-sm text-gray-600">데이터 로딩 중...</p>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default function App() {
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [showSettings, setShowSettings] = useState(false);
+
+  const menuItems = [
+    { id: 'dashboard', name: '대시보드' },
+    { id: 'users', name: '회원 관리' },
+    { id: 'construction', name: '시공 관리' },
+    { id: 'rental', name: '렌탈 관리' },
+    { id: 'dj', name: 'DJ 관리' },
+    { id: 'mainVisual', name: '메인비주얼 관리' },
+    { id: 'contents', name: '컨텐츠 관리' },
+    { id: 'news', name: '뉴스 관리' },
+    { id: 'terms', name: '약관 관리' },
+    { id: 'audit', name: '감사 관리' },
+  ];
+
+  return (
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <nav className="w-64 bg-gray-900 text-white p-6 flex flex-col">
+        <h1 className="text-xl font-bold mb-8">Admin Dashboard</h1>
+        <div className="space-y-2 flex-1">
+          {menuItems.map((item) => (
+            <button 
+              key={item.id}
+              onClick={() => setActiveTab(item.id)} 
+              className={`block w-full text-left p-3 rounded-lg transition-colors ${activeTab === item.id ? 'bg-gray-700' : 'hover:bg-gray-800'}`}
+            >
+              {item.name}
+            </button>
+          ))}
+          
+          {/* Settings Submenu */}
+          <div className="pt-4 border-t border-gray-700">
+            <button 
+              onClick={() => setShowSettings(!showSettings)}
+              className="block w-full text-left p-3 rounded-lg hover:bg-gray-800 transition-colors font-bold"
+            >
+              설정 {showSettings ? '▲' : '▼'}
+            </button>
+            {showSettings && (
+              <div className="pl-4 space-y-1 mt-1">
+                <button onClick={() => setActiveTab('adminSettings')} className={`block w-full text-left p-2 rounded ${activeTab === 'adminSettings' ? 'bg-gray-700' : 'hover:bg-gray-800'}`}>관리자 관리</button>
+                <button onClick={() => setActiveTab('sseSettings')} className={`block w-full text-left p-2 rounded ${activeTab === 'sseSettings' ? 'bg-gray-700' : 'hover:bg-gray-800'}`}>SSE 관리</button>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* Content */}
+      <main className="flex-1 p-10">
+        <div className="max-w-7xl mx-auto">
+          {activeTab === 'dashboard' && <Dashboard />}
+          {activeTab === 'mainVisual' && <MainVisualManager />}
+          {!['dashboard', 'mainVisual'].includes(activeTab) && (
+            <h2 className="text-2xl font-bold text-gray-800">
+              {menuItems.find(item => item.id === activeTab)?.name || 
+               (activeTab === 'adminSettings' ? '관리자 관리' : 
+                activeTab === 'sseSettings' ? 'SSE 관리' : '준비 중입니다...')}
+            </h2>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}

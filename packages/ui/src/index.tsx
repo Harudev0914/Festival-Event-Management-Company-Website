@@ -2,6 +2,8 @@ import * as React from "react";
 
 // 1. Base Typography Components
 export * from "./Navbar";
+export * from "./AdminApp";
+export * from "./MainVisualManager";
 export * from "./BookingForm";
 export * from "./MenuManager";
 export * from "./FloatingContact";

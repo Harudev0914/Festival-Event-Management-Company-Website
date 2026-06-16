@@ -74,8 +74,30 @@ export const reviews = pgTable("reviews", {
 
 // 7. System Configs Table (For Feature Flags & Menu Management)
 export const systemConfigs = pgTable("system_configs", {
-  key: varchar("key", { length: 100 }).primaryKey(), // e.g., 'menu_rental_visible'
-  value: text("value").notNull(), // 'true' or 'false'
+  key: varchar("key", { length: 100 }).primaryKey(), // e.g., 'menu_rental_visible', 'main_visual_hero_image'
+  value: text("value").notNull(), // 'true', 'false', or JSON string for complex config
   description: text("description"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// 9. Main Visual Items Table
+export const mainVisualItems = pgTable("main_visual_items", {
+  id: serial("id").primaryKey(),
+  number: integer("number").notNull(), // 순서/번호
+  title: varchar("title", { length: 255 }).notNull(),
+  imageUrl: varchar("image_url", { length: 500 }).notNull(),
+  subtitle: text("subtitle"),
+  isActive: integer("is_active").default(1), // 1: 활성, 0: 비활성
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// 10. Audit Logs Table (For tracking changes)
+export const auditLogs = pgTable("audit_logs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  action: varchar("action", { length: 100 }).notNull(), // 예: 'CREATE_VISUAL', 'UPDATE_VISUAL'
+  targetId: varchar("target_id", { length: 100 }),
+  performedBy: varchar("performed_by", { length: 100 }),
+  details: text("details"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
