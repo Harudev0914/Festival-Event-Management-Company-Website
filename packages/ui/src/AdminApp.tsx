@@ -1,24 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import MainVisualManager from './MainVisualManager';
-import { LayoutDashboard } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { Hammer } from 'lucide-react';
-import { Calendar } from 'lucide-react';
-import { Music } from 'lucide-react';
-import { Image as ImageIcon } from 'lucide-react';
-import { FileText } from 'lucide-react';
-import { Newspaper } from 'lucide-react';
-import { FileCheck } from 'lucide-react';
-import { ClipboardList } from 'lucide-react';
-import { Settings } from 'lucide-react';
-import { ChevronDown } from 'lucide-react';
-import { ChevronUp } from 'lucide-react';
-import { X } from 'lucide-react';
-import { Menu } from 'lucide-react';
-import { Instagram } from 'lucide-react';
-import { Youtube } from 'lucide-react';
+import { MainVisualManager } from './MainVisualManager';
+import { 
+  LayoutDashboard, Users, Hammer, Calendar, Music, 
+  Image as ImageIcon, FileText, Newspaper, FileCheck, 
+  ClipboardList, Settings, ChevronDown, ChevronUp, X, Menu
+} from 'lucide-react';
 
 function Dashboard() {
   return (
@@ -73,16 +61,14 @@ export const AdminApp = () => {
     <div className="flex min-h-screen bg-gray-50">
       <nav className={`fixed inset-y-0 left-0 bg-[#121212] text-white z-50 transition-all duration-300 shadow-2xl ${isSidebarOpen ? 'w-72' : 'w-20'}`}>
         <div className="flex h-full">
+          {/* Left Rail (Narrow) */}
           <div className="w-20 bg-[#111] flex flex-col items-center py-8 justify-between text-yellow-500">
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 hover:bg-gray-800 rounded-full">
               {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <div className="flex flex-col gap-6">
-              <Instagram size={20} />
-              <Youtube size={20} />
-            </div>
           </div>
 
+          {/* Right Sidebar Column */}
           {isSidebarOpen && (
             <div className="flex-1 p-8 flex flex-col">
               <h1 className="text-xl font-bold mb-10 tracking-wider">KLIPSE</h1>
@@ -112,8 +98,10 @@ export const AdminApp = () => {
                   );
                 })}
               </div>
+              
+              {/* Settings at bottom */}
               <div className="pt-6 border-t border-gray-800">
-                <button onClick={() => setActiveTab('settings')} className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-gray-800 text-gray-400 hover:text-white">
+                <button onClick={() => setActiveTab('settings')} className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-white">
                     <Settings size={20}/>
                     <span className="text-sm tracking-wide">설정</span>
                 </button>
@@ -122,6 +110,7 @@ export const AdminApp = () => {
           )}
         </div>
       </nav>
+
       <main className={`flex-1 p-10 transition-all duration-300 ${isSidebarOpen ? 'ml-72' : 'ml-20'}`}>
         <div className="max-w-7xl mx-auto">
           {activeTab === 'dashboard' && <Dashboard />}

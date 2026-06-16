@@ -18,6 +18,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@repo/common": ["../../packages/common/dist/index.js"],
+      "@repo/db": ["../../packages/db/dist/index.js"]
     }
   }
 }
