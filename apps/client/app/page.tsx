@@ -147,6 +147,79 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* 5. New Section (Fanplusone) */}
+        <section className="min-h-screen relative z-40 overflow-hidden flex items-end justify-start p-12 md:p-20 bg-[#F2F2F2]">
+          {/* Background Image Layer (aligned to bottom right) */}
+          <div className="absolute inset-0 z-0 flex items-end justify-end pointer-events-none">
+            <img 
+              src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1017&h=1017&auto=format&fit=crop" 
+              alt="Construction Image" 
+              className="w-full h-full md:w-[80vh] md:h-[80vh] object-cover"
+            />
+          </div>
+
+          {/* Left-aligned Content Box */}
+          <div className="relative z-10 w-full max-w-2xl text-left">
+            <Text className="text-[#d44949] font-bold text-xs uppercase tracking-widest mb-4">CONSTRUCTION</Text>
+            <div className="inline-block bg-white p-4 rounded-md mb-2">
+              <Heading level={2} className="text-4xl md:text-6xl font-bold text-[#121212] uppercase tracking-tighter font-display">
+                CONSTRUCTION
+              </Heading>
+            </div>
+            <div className="inline-block bg-white p-4 rounded-md mb-6">
+              <Heading level={3} className="text-4xl md:text-6xl font-bold text-[#121212] uppercase tracking-tighter font-display">
+                SUB-HEADER HERE
+              </Heading>
+            </div>
+            <div className="bg-[#1A1A1A] p-10 shadow-2xl border border-zinc-700 w-[1249px] h-[428px] flex flex-col justify-center rounded-[4px]">
+              <p className="text-zinc-300 text-lg leading-relaxed mb-8">
+                As G-DRAGON opens a bold new chapter, becomes part of the exclusive community that follows his journey every step of the way. From one-of-a-kind experiences, first access to albums and tickets, the official fan club is your key to his creative universe.
+              </p>
+              <Button className="w-full bg-[#f3c950] text-[#121212] px-8 py-4 uppercase font-bold tracking-widest hover:bg-[#f3c950] hover:text-white transition-all flex items-center justify-center gap-2 rounded-[4px] shadow-none">
+                JOIN FANPLUSONE JAPAN
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. New Section (Rental) */}
+        <section className="min-h-screen relative z-40 overflow-hidden flex flex-col justify-center p-12 md:p-20 bg-white">
+          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-12">
+            {/* Left Header Column */}
+            <div className="md:col-span-1">
+              <Text className="text-[#d44949] font-bold text-xs uppercase tracking-widest mb-4">RECENT</Text>
+              <Heading level={2} className="text-4xl md:text-6xl font-bold text-[#121212] uppercase tracking-tighter font-display mb-8">
+                LATEST<br />VIDEOS
+              </Heading>
+              <div className="flex gap-4">
+                <button className="p-4 border border-zinc-300 rounded-full hover:bg-zinc-100 transition-all"><ChevronLeft className="w-6 h-6" /></button>
+                <button className="p-4 border border-zinc-300 rounded-full hover:bg-zinc-100 transition-all"><ChevronRight className="w-6 h-6" /></button>
+              </div>
+            </div>
+
+            {/* Right Gallery Column */}
+            <div className="md:col-span-3 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+                {[
+                  { title: "G-DRAGON - TOO BAD (FEAT. ANDERSON .PAAK) (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800&h=600&auto=format&fit=crop" },
+                  { title: "G-DRAGON - DRAMA (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=800&h=600&auto=format&fit=crop" },
+                  { title: "G-DRAGON - ANOTHER TRACK (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1493225255756-d922f6042a04?q=80&w=800&h=600&auto=format&fit=crop" }
+                ].map((video, i) => (
+                  <div key={i} className="group w-full">
+                    <div className="overflow-hidden rounded-lg mb-4 w-full">
+                      <img src={video.img} alt={video.title} className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <h3 className="text-lg font-bold text-[#121212] mb-2 leading-tight">{video.title}</h3>
+                    <button className="text-[#d44949] font-bold flex items-center gap-2 hover:underline">
+                      See more <ArrowRight size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
