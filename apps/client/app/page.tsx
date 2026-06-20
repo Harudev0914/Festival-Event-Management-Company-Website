@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from "react";
-import { APP_NAME, DEFAULT_TICKER_DATA } from "@repo/common";
-import { Heading, Text, Button, Card, AnimatedCounter, CountdownTimer, BannerCarousel } from "@repo/ui";
-import { motion, AnimatePresence, Variants, useScroll, useTransform } from "framer-motion";
+import { DEFAULT_TICKER_DATA } from "@repo/common";
+import { Heading, Text, Button, CountdownTimer } from "@repo/ui";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from 'next/dynamic';
 import LoadingLogo from './components/LoadingLogo';
@@ -42,9 +42,8 @@ const ScrollColorWord = ({ text, scrollYProgress, start, end }: { text: string; 
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
-  const [mounted, setMounted] = React.useState(false);
   const [currentSlide, setCurrentSlide] = React.useState(0);
-  const containerRef = React.useRef(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const galleryRef = React.useRef<HTMLDivElement>(null);
   
   const scrollGallery = (direction: 'left' | 'right') => {
@@ -58,12 +57,11 @@ export default function Home() {
   };
   
   const { scrollYProgress } = useScroll({ 
-    target: mounted ? containerRef : undefined, 
+    target: containerRef, 
     offset: ["start start", "end end"] 
   });
 
   React.useEffect(() => {
-    setMounted(true);
     document.body.style.overflow = 'hidden'; // Disable scroll
     const timer = setTimeout(() => {
       setIsLoaded(true);
@@ -74,8 +72,6 @@ export default function Home() {
       document.body.style.overflow = 'auto'; // Ensure cleanup
     };
   }, []);
-
-  if (!mounted) return null;
 
   return (
     <div className="relative">
