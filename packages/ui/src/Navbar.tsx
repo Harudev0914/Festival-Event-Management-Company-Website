@@ -80,7 +80,7 @@ export const Navbar = ({ logo }: { logo?: string }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-[#0A0A0B]/95 z-[100] flex flex-col items-center justify-center pointer-events-auto backdrop-blur-md px-6"
+            className="fixed inset-0 h-screen w-screen bg-[#0A0A0B]/95 z-[100] flex flex-col items-center justify-center pointer-events-auto backdrop-blur-md px-6"
           >
             <button 
               className="absolute top-8 right-8 md:top-10 md:right-10 text-white flex items-center gap-2 group"
