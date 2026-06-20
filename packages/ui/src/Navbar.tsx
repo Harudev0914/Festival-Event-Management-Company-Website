@@ -47,7 +47,13 @@ export const Navbar = ({ logo }: { logo?: string }) => {
       {/* Menu Trigger */}
       <button 
         className="flex items-center gap-3 text-white pointer-events-auto group bg-black/20 backdrop-blur-md px-5 py-2.5 rounded-full hover:bg-white hover:text-black transition-all duration-300"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
+        aria-label="Toggle menu"
+        aria-expanded={isOpen}
       >
         <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Menu</span>
         <div className="space-y-1">
@@ -78,7 +84,12 @@ export const Navbar = ({ logo }: { logo?: string }) => {
           >
             <button 
               className="absolute top-8 right-8 md:top-10 md:right-10 text-white flex items-center gap-2 group"
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
+              aria-label="Close menu"
             >
               <span className="text-[11px] font-bold tracking-[0.2em] uppercase opacity-50 group-hover:opacity-100 transition-opacity">Close</span>
               <div className="relative w-6 h-6 flex items-center justify-center">
