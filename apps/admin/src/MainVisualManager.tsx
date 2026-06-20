@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export const MainVisualManager = () => {
   const [config, setConfig] = useState({ imageUrl: '', title: '', subtitle: '' });

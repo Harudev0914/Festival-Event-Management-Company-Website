@@ -3,7 +3,7 @@
 import * as React from "react";
 import { DEFAULT_TICKER_DATA } from "@repo/common";
 import { Heading, Text, Button, CountdownTimer } from "@repo/ui";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, MotionValue } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from 'next/dynamic';
 import LoadingLogo from './components/LoadingLogo';
@@ -31,7 +31,7 @@ const DJ_GALLERY_IMAGES = [
 
 const ScrollBackground = dynamic(() => import('./components/ScrollBackground'), { ssr: false });
 
-const ScrollColorWord = ({ text, scrollYProgress, start, end }: { text: string; scrollYProgress: any; start: number; end: number }) => {
+const ScrollColorWord = ({ text, scrollYProgress, start, end }: { text: string; scrollYProgress: MotionValue<number>; start: number; end: number }) => {
   const color = useTransform(scrollYProgress, [start, end], ["#3f3f46", "#ffffff"]);
   return (
     <div className="w-full text-center px-4">
