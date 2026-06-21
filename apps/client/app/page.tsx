@@ -48,7 +48,7 @@ export default function Home() {
   
   const scrollGallery = (direction: 'left' | 'right') => {
     if (galleryRef.current) {
-      const scrollAmount = 380; // Card width (350) + gap (32)
+      const scrollAmount = 332; // Card width (300) + gap (32)
       galleryRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
@@ -220,9 +220,9 @@ export default function Home() {
 
         {/* 6. New Section (Rental) */}
         <section className="min-h-screen relative z-40 overflow-hidden flex flex-col justify-center p-12 md:p-20 bg-white">
-          <div className="max-w-full mx-auto w-full grid grid-cols-1 md:grid-cols-6 gap-16">
+          <div className="max-w-full mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             {/* Left Header Column */}
-            <div className="md:col-span-2">
+            <div className="md:col-span-3">
               <Text className="!text-[#d44949] font-bold text-xs uppercase tracking-widest mb-4">RECENT</Text>
               <Heading level={2} className="text-4xl md:text-6xl font-bold !text-[#121212] uppercase tracking-tighter font-display mb-8">
                 LATEST<br />VIDEOS
@@ -244,14 +244,16 @@ export default function Home() {
             </div>
 
             {/* Right Gallery Column */}
-            <div className="md:col-span-4 w-full overflow-hidden" ref={galleryRef}>
-              <div className="flex gap-8 overflow-x-auto px-4 pb-10 no-scrollbar" style={{ scrollBehavior: 'smooth' }}>
+            <div className="md:col-span-9 w-full overflow-hidden relative">
+              <div className="flex gap-8 overflow-x-auto pb-10 no-scrollbar snap-x snap-mandatory" style={{ scrollBehavior: 'smooth' }} ref={galleryRef}>
                 {[
                   { title: "G-DRAGON - TOO BAD (FEAT. ANDERSON .PAAK) (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800&h=600&auto=format&fit=crop" },
                   { title: "G-DRAGON - DRAMA (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=800&h=600&auto=format&fit=crop" },
-                  { title: "G-DRAGON - ANOTHER TRACK (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1493225255756-d922f6042a04?q=80&w=800&h=600&auto=format&fit=crop" }
+                  { title: "G-DRAGON - ANOTHER TRACK (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1493225255756-d922f6042a04?q=80&w=800&h=600&auto=format&fit=crop" },
+                  { title: "G-DRAGON - POWER (OFFICIAL VIDEO)", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&h=600&auto=format&fit=crop" },
+                  { title: "G-DRAGON - HEARTBREAKER (LIVE REMIX)", img: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&h=600&auto=format&fit=crop" }
                 ].map((video, i) => (
-                  <div key={i} className="group w-[300px] flex-shrink-0">
+                  <div key={i} className="group w-[300px] flex-shrink-0 snap-start">
                     <div className="overflow-hidden rounded-lg mb-4 w-full">
                       <img src={video.img} alt={video.title} className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500" />
                     </div>
