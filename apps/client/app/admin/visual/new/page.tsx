@@ -41,9 +41,9 @@ export default function NewVisualPage() {
   const renderValueInput = (type: string, value: string, setValue: (val: string) => void, placeholder: string) => {
     const isFile = type.includes('file');
     return isFile ? (
-      <input type="file" className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none" onChange={e => setValue(e.target.files?.[0]?.name || '')} />
+      <input type="file" className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.files?.[0]?.name || '')} />
     ) : (
-      <input type="text" placeholder={placeholder} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none" value={value} onChange={e => setValue(e.target.value)} />
+      <input type="text" placeholder={placeholder} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none" value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)} />
     );
   };
 
@@ -62,49 +62,48 @@ export default function NewVisualPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <label className="block font-semibold text-gray-700">타이틀</label>
-                        <input className="w-full p-3 border border-gray-300 rounded-lg" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="타이틀 입력" />
+                        <input className="w-full p-3 border border-gray-300 rounded-lg" value={formData.title} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, title: e.target.value})} placeholder="타이틀 입력" />
                     </div>
                     <div className="space-y-2">
                         <label className="block font-semibold text-gray-700">상세 내용</label>
-                        <input className="w-full p-3 border border-gray-300 rounded-lg" value={formData.detailContent} onChange={e => setFormData({...formData, detailContent: e.target.value})} placeholder="상세 내용 입력" />
+                        <input className="w-full p-3 border border-gray-300 rounded-lg" value={formData.detailContent} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, detailContent: e.target.value})} placeholder="상세 내용 입력" />
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  // ... (keep state)
-                                    {/* Background */}
-                                    <div className="space-y-2">
-                                      <label className="block font-semibold text-gray-700">배경 설정</label>
-                                      <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.backgroundType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, backgroundType: e.target.value as any, backgroundValue: ''})}>
-                                        <option value="image_file">이미지 (File)</option>
-                                        <option value="image_url">이미지 (URL)</option>
-                                        <option value="video_file">영상 (File)</option>
-                                        <option value="video_url">영상 (URL)</option>
-                                      </select>
-                                      {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
-                                    </div>
+                  {/* Background */}
+                  <div className="space-y-2">
+                    <label className="block font-semibold text-gray-700">배경 설정</label>
+                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.backgroundType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, backgroundType: e.target.value, backgroundValue: ''})}>
+                      <option value="image_file">이미지 (File)</option>
+                      <option value="image_url">이미지 (URL)</option>
+                      <option value="video_file">영상 (File)</option>
+                      <option value="video_url">영상 (URL)</option>
+                    </select>
+                    {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
+                  </div>
 
-                                    {/* DJ Image */}
-                                    <div className="space-y-2">
-                                      <label className="block font-semibold text-gray-700">DJ 프로필 설정</label>
-                                      <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.djImageType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, djImageType: e.target.value as any, djImageValue: ''})}>
-                                        <option value="image_file">이미지 (File)</option>
-                                        <option value="image_url">이미지 (URL)</option>
-                                        <option value="video_file">영상 (File)</option>
-                                        <option value="video_url">영상 (URL)</option>
-                                      </select>
-                                      {renderValueInput(formData.djImageType, formData.djImageValue, (val) => setFormData({...formData, djImageValue: val}), "경로 또는 URL 입력")}
-                                    </div>
-
+                  {/* DJ Image */}
+                  <div className="space-y-2">
+                    <label className="block font-semibold text-gray-700">DJ 프로필 설정</label>
+                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.djImageType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, djImageType: e.target.value, djImageValue: ''})}>
+                      <option value="image_file">이미지 (File)</option>
+                      <option value="image_url">이미지 (URL)</option>
+                      <option value="video_file">영상 (File)</option>
+                      <option value="video_url">영상 (URL)</option>
+                    </select>
+                    {renderValueInput(formData.djImageType, formData.djImageValue, (val) => setFormData({...formData, djImageValue: val}), "경로 또는 URL 입력")}
+                  </div>
+                </div>
 
                 {/* Timestamp */}
                 <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" className="w-5 h-5" checked={formData.useTimestamp} onChange={e => setFormData({...formData, useTimestamp: e.target.checked})} />
+                    <input type="checkbox" className="w-5 h-5" checked={formData.useTimestamp} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, useTimestamp: e.target.checked})} />
                     <span className="font-semibold text-gray-700">타임스탬프 기능 사용</span>
                   </label>
                   {formData.useTimestamp && (
-                    <input type="date" className="w-full p-3 border border-gray-300 rounded-lg" value={formData.timestampDate} onChange={e => setFormData({...formData, timestampDate: e.target.value})} />
+                    <input type="date" className="w-full p-3 border border-gray-300 rounded-lg" value={formData.timestampDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, timestampDate: e.target.value})} />
                   )}
                 </div>
 
