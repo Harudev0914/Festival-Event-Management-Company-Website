@@ -5,10 +5,10 @@ import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function NewVisualPage() {
   const [formData, setFormData] = useState({
-    backgroundType: 'image_file',
-    backgroundValue: '',
-    djImageType: 'image_file',
-    djImageValue: '',
+    backgroundType: 'video_url', // Default to video_url for the example
+    backgroundValue: 'AIogFe419-8', // Video ID
+    djImageType: 'image_url', // Default to image_url for the example
+    djImageValue: 'https://www.ambitionmusik.com/image/artist/img_donmalik.png',
     detailContent: '',
     detailFont: 'sans-serif',
     useTimestamp: false,
@@ -51,10 +51,28 @@ export default function NewVisualPage() {
           <div className="max-w-5xl mx-auto space-y-8">
             
             {/* Preview Section */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h2 className="text-lg font-bold mb-4 text-gray-900">미리보기</h2>
-              <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
-                Main Visual Preview Area
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 overflow-hidden relative h-[500px]">
+              <h2 className="text-lg font-bold mb-4 text-gray-900 relative z-10">미리보기</h2>
+              
+              {/* Background Preview */}
+              <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                {formData.backgroundType.includes('video') ? (
+                  <iframe 
+                    className="absolute top-1/2 left-1/2 w-[115vw] h-[65vw] min-h-[115vh] min-w-[204vh] -translate-x-1/2 -translate-y-1/2 scale-110" 
+                    src={`https://www.youtube.com/embed/${formData.backgroundValue}?autoplay=1&mute=1&controls=0&loop=1&playlist=${formData.backgroundValue}&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&playsinline=1&fs=0`} 
+                    frameBorder="0" 
+                    allow="autoplay; encrypted-media">
+                  </iframe>
+                ) : (
+                  <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${formData.backgroundValue})` }}></div>
+                )}
+                <div className="absolute inset-0 bg-black/40 backdrop-brightness-50"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black z-[2]"></div>
+              </div>
+
+              {/* DJ Profile Preview */}
+              <div className="absolute inset-0 flex items-end justify-center z-1 pointer-events-none" style={{ opacity: 0.7, transform: 'scale(0.9)' }}>
+                <img src={formData.djImageValue} alt="Artist" className="h-[70vh] md:h-[100vh] w-auto object-contain object-bottom mix-blend-lighten grayscale brightness-150" />
               </div>
             </div>
 
@@ -73,7 +91,7 @@ export default function NewVisualPage() {
                       <option value="video_file">영상 (File)</option>
                       <option value="video_url">영상 (URL)</option>
                     </select>
-                    {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
+                    {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력 (영상은 유튜브 ID)")}
                   </div>
 
                   {/* DJ Image */}
