@@ -71,30 +71,31 @@ export default function NewVisualPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Background */}
-                  <div className="space-y-2">
-                    <label className="block font-semibold text-gray-700">배경 설정</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.backgroundType} onChange={e => setFormData({...formData, backgroundType: e.target.value as any, backgroundValue: ''})}>
-                      <option value="image_file">이미지 (File)</option>
-                      <option value="image_url">이미지 (URL)</option>
-                      <option value="video_file">영상 (File)</option>
-                      <option value="video_url">영상 (URL)</option>
-                    </select>
-                    {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
-                  </div>
+                  // ... (keep state)
+                                    {/* Background */}
+                                    <div className="space-y-2">
+                                      <label className="block font-semibold text-gray-700">배경 설정</label>
+                                      <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.backgroundType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, backgroundType: e.target.value as any, backgroundValue: ''})}>
+                                        <option value="image_file">이미지 (File)</option>
+                                        <option value="image_url">이미지 (URL)</option>
+                                        <option value="video_file">영상 (File)</option>
+                                        <option value="video_url">영상 (URL)</option>
+                                      </select>
+                                      {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
+                                    </div>
 
-                  {/* DJ Image */}
-                  <div className="space-y-2">
-                    <label className="block font-semibold text-gray-700">DJ 프로필 설정</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.djImageType} onChange={e => setFormData({...formData, djImageType: e.target.value as any, djImageValue: ''})}>
-                      <option value="image_file">이미지 (File)</option>
-                      <option value="image_url">이미지 (URL)</option>
-                      <option value="video_file">영상 (File)</option>
-                      <option value="video_url">영상 (URL)</option>
-                    </select>
-                    {renderValueInput(formData.djImageType, formData.djImageValue, (val) => setFormData({...formData, djImageValue: val}), "경로 또는 URL 입력")}
-                  </div>
-                </div>
+                                    {/* DJ Image */}
+                                    <div className="space-y-2">
+                                      <label className="block font-semibold text-gray-700">DJ 프로필 설정</label>
+                                      <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.djImageType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({...formData, djImageType: e.target.value as any, djImageValue: ''})}>
+                                        <option value="image_file">이미지 (File)</option>
+                                        <option value="image_url">이미지 (URL)</option>
+                                        <option value="video_file">영상 (File)</option>
+                                        <option value="video_url">영상 (URL)</option>
+                                      </select>
+                                      {renderValueInput(formData.djImageType, formData.djImageValue, (val) => setFormData({...formData, djImageValue: val}), "경로 또는 URL 입력")}
+                                    </div>
+
 
                 {/* Timestamp */}
                 <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
