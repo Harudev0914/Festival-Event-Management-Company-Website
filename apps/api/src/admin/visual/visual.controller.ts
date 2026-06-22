@@ -7,6 +7,7 @@ export interface MainVisualDto {
   djImageType: 'image_file' | 'image_url' | 'video_file' | 'video_url';
   djImageValue: string;
   detailContent: string;
+  detailFont: string;
   useTimestamp: boolean;
   timestampDate?: string;
 }
@@ -32,6 +33,10 @@ export class VisualController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.visualService.remove(Number(id));
+    return this.quietRemove(Number(id));
+  }
+  
+  private quietRemove(id: number) {
+    return this.visualService.remove(id);
   }
 }

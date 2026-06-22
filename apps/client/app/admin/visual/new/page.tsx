@@ -10,6 +10,7 @@ export default function NewVisualPage() {
     djImageType: 'image_file',
     djImageValue: '',
     detailContent: '',
+    detailFont: 'sans-serif',
     useTimestamp: false,
     timestampDate: '',
   });
@@ -47,55 +48,77 @@ export default function NewVisualPage() {
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
         <main className="flex-1 p-10">
-          <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-            <h1 className="text-2xl font-bold mb-8 text-gray-900">새 메인비주얼 등록</h1>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Background */}
-                <div className="space-y-2">
-                  <label className="block font-semibold text-gray-700">배경 설정</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.backgroundType} onChange={e => setFormData({...formData, backgroundType: e.target.value as any, backgroundValue: ''})}>
-                    <option value="image_file">이미지 (File)</option>
-                    <option value="image_url">이미지 (URL)</option>
-                    <option value="video_file">영상 (File)</option>
-                    <option value="video_url">영상 (URL)</option>
-                  </select>
-                  {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
+          <div className="max-w-5xl mx-auto space-y-8">
+            
+            {/* Preview Section */}
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <h2 className="text-lg font-bold mb-4 text-gray-900">미리보기</h2>
+              <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                Main Visual Preview Area
+              </div>
+            </div>
+
+            {/* Configuration Form Section */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+              <h1 className="text-2xl font-bold mb-8 text-gray-900">메인비주얼 설정</h1>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Background */}
+                  <div className="space-y-2">
+                    <label className="block font-semibold text-gray-700">배경 설정</label>
+                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.backgroundType} onChange={e => setFormData({...formData, backgroundType: e.target.value as any, backgroundValue: ''})}>
+                      <option value="image_file">이미지 (File)</option>
+                      <option value="image_url">이미지 (URL)</option>
+                      <option value="video_file">영상 (File)</option>
+                      <option value="video_url">영상 (URL)</option>
+                    </select>
+                    {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
+                  </div>
+
+                  {/* DJ Image */}
+                  <div className="space-y-2">
+                    <label className="block font-semibold text-gray-700">DJ 프로필 설정</label>
+                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.djImageType} onChange={e => setFormData({...formData, djImageType: e.target.value as any, djImageValue: ''})}>
+                      <option value="image_file">이미지 (File)</option>
+                      <option value="image_url">이미지 (URL)</option>
+                      <option value="video_file">영상 (File)</option>
+                      <option value="video_url">영상 (URL)</option>
+                    </select>
+                    {renderValueInput(formData.djImageType, formData.djImageValue, (val) => setFormData({...formData, djImageValue: val}), "경로 또는 URL 입력")}
+                  </div>
                 </div>
 
-                {/* DJ Image */}
-                <div className="space-y-2">
-                  <label className="block font-semibold text-gray-700">DJ 프로필 설정</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.djImageType} onChange={e => setFormData({...formData, djImageType: e.target.value as any, djImageValue: ''})}>
-                    <option value="image_file">이미지 (File)</option>
-                    <option value="image_url">이미지 (URL)</option>
-                    <option value="video_file">영상 (File)</option>
-                    <option value="video_url">영상 (URL)</option>
-                  </select>
-                  {renderValueInput(formData.djImageType, formData.djImageValue, (val) => setFormData({...formData, djImageValue: val}), "경로 또는 URL 입력")}
+                {/* Detail Content */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="block font-semibold text-gray-700">상세 내용</label>
+                    <textarea className="w-full p-3 border border-gray-300 rounded-lg h-32 focus:ring-2 focus:ring-black outline-none" value={formData.detailContent} onChange={e => setFormData({...formData, detailContent: e.target.value})} placeholder="상세 내용을 입력하세요" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block font-semibold text-gray-700">상세 내용 폰트</label>
+                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.detailFont} onChange={e => setFormData({...formData, detailFont: e.target.value})}>
+                      <option value="sans-serif">Sans-serif</option>
+                      <option value="serif">Serif</option>
+                      <option value="monospace">Monospace</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
 
-              {/* Detail Content */}
-              <div className="space-y-2">
-                <label className="block font-semibold text-gray-700">상세 내용</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-lg h-32 focus:ring-2 focus:ring-black outline-none" value={formData.detailContent} onChange={e => setFormData({...formData, detailContent: e.target.value})} placeholder="상세 내용을 입력하세요" />
-              </div>
+                {/* Timestamp */}
+                <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" className="w-5 h-5" checked={formData.useTimestamp} onChange={e => setFormData({...formData, useTimestamp: e.target.checked})} />
+                    <span className="font-semibold text-gray-700">타임스탬프 기능 사용</span>
+                  </label>
+                  {formData.useTimestamp && (
+                    <input type="date" className="w-full p-3 border border-gray-300 rounded-lg" value={formData.timestampDate} onChange={e => setFormData({...formData, timestampDate: e.target.value})} />
+                  )}
+                </div>
 
-              {/* Timestamp */}
-              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" className="w-5 h-5" checked={formData.useTimestamp} onChange={e => setFormData({...formData, useTimestamp: e.target.checked})} />
-                  <span className="font-semibold text-gray-700">타임스탬프 기능 사용</span>
-                </label>
-                {formData.useTimestamp && (
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-lg" value={formData.timestampDate} onChange={e => setFormData({...formData, timestampDate: e.target.value})} />
-                )}
-              </div>
-
-              <button type="submit" className="w-full px-6 py-4 bg-black text-white rounded-lg font-bold text-lg hover:bg-gray-800 transition">등록 완료</button>
-            </form>
+                <button type="submit" className="w-full px-6 py-4 bg-black text-white rounded-lg font-bold text-lg hover:bg-gray-800 transition">등록 완료</button>
+              </form>
+            </div>
           </div>
         </main>
       </div>
