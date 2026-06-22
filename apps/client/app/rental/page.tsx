@@ -21,7 +21,7 @@ const DJ_PRODUCTS: Product[] = [
   { id: 3, name: "Technics SL-1200MK7", price: 1200000, desc: "Direct Drive Turntable", manufacturer: "Technics", category: "Turntable" },
 ];
 
-const DJ_MANUFACTURERS = ["Pioneer DJ", "Technics", "Denon DJ", "Allen & Heath", "Rane"];
+const DJ_CATEGORIES = Array.from(new Set(DJ_PRODUCTS.map(p => p.category)));
 
 export default function RentalPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,11 +31,11 @@ export default function RentalPage() {
 
   const filteredProducts = DJ_PRODUCTS.filter(p => 
     (searchTerm === "" || p.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedFilters.length === 0 || selectedFilters.includes(p.manufacturer))
+    (selectedFilters.length === 0 || selectedFilters.includes(p.category))
   );
 
-  const toggleFilter = (man: string) => {
-    setSelectedFilters(prev => prev.includes(man) ? prev.filter(c => c !== man) : [...prev, man]);
+  const toggleFilter = (cat: string) => {
+    setSelectedFilters(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
   };
 
   const addToCart = (product: Product) => {
@@ -87,15 +87,15 @@ export default function RentalPage() {
 
             <div className="bg-zinc-900 p-6 rounded-md border border-zinc-800 text-sm">
                 <div className="flex gap-4 items-start">
-                    <span className="font-bold text-zinc-400 mt-1">장비별 제조사:</span>
+                    <span className="font-bold text-zinc-400 mt-1">장비 분류:</span>
                     <div className="flex gap-4 flex-wrap">
-                        {DJ_MANUFACTURERS.map(man => (
-                            <label key={man} className="flex items-center gap-2 cursor-pointer group">
-                                <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${selectedFilters.includes(man) ? 'bg-[#c84d4b] border-[#c84d4b]' : 'border-zinc-600 group-hover:border-[#c84d4b]'}`}>
-                                    <input type="checkbox" className="hidden" checked={selectedFilters.includes(man)} onChange={() => toggleFilter(man)}/>
-                                    {selectedFilters.includes(man) && <span className="text-white text-xs">✓</span>}
+                        {DJ_CATEGORIES.map(cat => (
+                            <label key={cat} className="flex items-center gap-2 cursor-pointer group">
+                                <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${selectedFilters.includes(cat) ? 'bg-[#c84d4b] border-[#c84d4b]' : 'border-zinc-600 group-hover:border-[#c84d4b]'}`}>
+                                    <input type="checkbox" className="hidden" checked={selectedFilters.includes(cat)} onChange={() => toggleFilter(cat)}/>
+                                    {selectedFilters.includes(cat) && <span className="text-white text-xs">✓</span>}
                                 </div>
-                                <span className="group-hover:text-[#c84d4b] transition">{man}</span>
+                                <span className="group-hover:text-[#c84d4b] transition">{cat}</span>
                             </label>
                         ))}
                     </div>
@@ -142,11 +142,16 @@ export default function RentalPage() {
             <div className="bg-zinc-900 p-4 rounded-md border border-zinc-800 sticky top-24">
                 <h2 className="text-lg font-bold mb-4 border-b border-zinc-700 pb-2 text-white">렌탈 견적 구성</h2>
                 <div className="space-y-4 max-h-[50vh] overflow-y-auto">
-                {DJ_MANUFACTURERS.map(man => (
-                    <div key={man} className="border border-zinc-700 rounded overflow-hidden">
-                        <div className="bg-[#c84d4b] p-2 text-sm font-bold text-white uppercase tracking-wider">{man}</div>
-                        {/* Assuming categorization by manufacturer for the sidebar now too, or just iterating products */}
-                        {Object.values(cart).flat().filter(item => item.manufacturer === man).map(item => (
+                {DJ_CATEGORIES.map(cat => (
+                    <div 
+                        key={cat} 
+                        className="border border-zinc-700 rounded overflow-hidden cursor-pointer"
+                        onClick={() => toggleFilter(cat)}
+                    >
+                        <div className={`p-2 text-sm font-bold text-white uppercase tracking-wider ${selectedFilters.includes(cat) ? 'bg-[#a63f3d]' : 'bg-[#c84d4b]'}`}>
+                            {cat}
+                        </div>
+                        {cart[cat]?.map(item => (
                             <div key={item.id} className="p-3 border-b border-zinc-700 last:border-b-0">
                                 <div className="text-sm mb-2 text-white font-medium">{item.name}</div>
                                 <div className="flex justify-between items-center">

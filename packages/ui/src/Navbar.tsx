@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 export const Navbar = ({ logo }: { logo?: string }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -39,9 +40,9 @@ export const Navbar = ({ logo }: { logo?: string }) => {
     <nav className={`fixed top-0 w-full z-50 px-4 md:px-12 h-20 md:h-24 flex items-center justify-between transition-all duration-300 pointer-events-none ${isScrolled ? 'bg-black/80 backdrop-blur-md' : ''}`}>
       {/* Logo Area */}
       <div className="flex items-center gap-3 pointer-events-auto">
-        <a href="/" className="text-xl md:text-2xl font-display leading-tight font-bold text-white uppercase tracking-tighter hover:text-primary transition-colors">
+        <Link href="/" className="text-xl md:text-2xl font-display leading-tight font-bold text-white uppercase tracking-tighter hover:text-primary transition-colors">
           Klipse
-        </a>
+        </Link>
       </div>
 
       {/* Menu Trigger */}
@@ -107,13 +108,13 @@ export const Navbar = ({ logo }: { logo?: string }) => {
                   transition={{ delay: 0.1 + index * 0.05 }}
                   className="group relative flex flex-col items-center"
                 >
-                  <a
+                  <Link
                     href={item.href}
                     className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-bold text-zinc-600 hover:text-white transition-all duration-500 uppercase tracking-tighter leading-none"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
-                  </a>
+                  </Link>
 
                   <span className="text-[10px] md:text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 mt-1">
                     {item.kr}

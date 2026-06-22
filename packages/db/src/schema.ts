@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, varchar, integer, decimal, pgEnum, uuid } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, varchar, integer, decimal, pgEnum, uuid, boolean } from "drizzle-orm/pg-core";
 
 // Enums for Status Management
 export const userRoleEnum = pgEnum("user_role", ["admin", "client", "dj"]);
@@ -99,5 +99,26 @@ export const auditLogs = pgTable("audit_logs", {
   targetId: varchar("target_id", { length: 100 }),
   performedBy: varchar("performed_by", { length: 100 }),
   details: text("details"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 11. Announcements Table
+export const announcements = pgTable("announcements", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  isActive: boolean("is_active").default(true),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 12. File Assets Table
+export const fileAssets = pgTable("file_assets", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  fileName: varchar("file_name", { length: 255 }).notNull(),
+  fileUrl: text("file_url").notNull(),
+  fileType: varchar("file_type", { length: 100 }).notNull(),
+  size: integer("size").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

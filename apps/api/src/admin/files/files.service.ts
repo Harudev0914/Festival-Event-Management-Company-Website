@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { db } from '@repo/db';
-import { fileAssets } from '@repo/db/src/schema';
+import { db, fileAssets } from '@repo/db';
 
 @Injectable()
 export class FilesService {

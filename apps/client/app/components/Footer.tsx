@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -13,7 +14,7 @@ export default function Footer() {
         
         {/* Logo */}
         <div className="text-center">
-            <a href="/" className="text-xl md:text-2xl font-display leading-tight font-bold text-white uppercase tracking-tighter hover:text-[#c84d4b] transition-colors">Klipse</a>
+            <Link href="/" className="text-xl md:text-2xl font-display leading-tight font-bold text-white uppercase tracking-tighter hover:text-[#c84d4b] transition-colors">Klipse</Link>
         </div>
 
         {/* Social Icons (Instagram) */}
@@ -31,13 +32,13 @@ export default function Footer() {
 
         {/* Navigation Menu */}
         <nav className="flex flex-wrap justify-center gap-8 text-sm text-[#c84d4b] font-medium uppercase tracking-wider">
-            <a href="/company" className="hover:underline">COMPANY</a>
-            <a href="/construction" className="hover:underline">CONSTRUCTION</a>
-            <a href="/rental" className="hover:underline">RENTAL</a>
-            <a href="/dj" className="hover:underline">DJ</a>
-            <a href="/location" className="hover:underline">LOCATION</a>
-            <a href="/contact" className="hover:underline">CONTACT</a>
-            <a href="/partnership" className="hover:underline">PARTNERSHIP</a>
+            <Link href="/company" className="hover:underline">COMPANY</Link>
+            <Link href="/construction" className="hover:underline">CONSTRUCTION</Link>
+            <Link href="/rental" className="hover:underline">RENTAL</Link>
+            <Link href="/dj" className="hover:underline">DJ</Link>
+            <Link href="/location" className="hover:underline">LOCATION</Link>
+            <Link href="/contact" className="hover:underline">CONTACT</Link>
+            <Link href="/partnership" className="hover:underline">PARTNERSHIP</Link>
         </nav>
 
         {/* Copyright */}

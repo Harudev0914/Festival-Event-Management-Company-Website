@@ -12,10 +12,20 @@ import { AuditLogMiddleware } from './audit-log.middleware';
 import { AuthModule } from './auth/auth.module';
 import { AdminConfigController } from './admin/admin-config.controller';
 import { AnalyticsController } from './analytics.controller';
+import { AnnouncementsModule } from './admin/announcements/announcements.module';
+import { FilesModule } from './admin/files/files.module';
+import { DashboardModule } from './admin/dashboard/dashboard.module';
+import { UsersModule } from './admin/users/users.module';
+import { VisualModule } from './admin/visual/visual.module';
 
 @Module({
   imports: [
     AuthModule,
+    AnnouncementsModule,
+    FilesModule,
+    DashboardModule,
+    UsersModule,
+    VisualModule,
     // 1. Structured Logging with PII Redaction
     WinstonModule.forRoot(loggerConfig),
     // 2. Rate Limiting

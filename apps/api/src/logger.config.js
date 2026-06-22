@@ -32,18 +32,43 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.db = void 0;
-const postgres_js_1 = require("drizzle-orm/postgres-js");
-const postgres_1 = __importDefault(require("postgres"));
-const schema = __importStar(require("./schema"));
-const connectionString = process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/db";
-const client = (0, postgres_1.default)(connectionString);
-exports.db = (0, postgres_js_1.drizzle)(client, { schema });
-__exportStar(require("./schema"), exports);
+exports.loggerConfig = void 0;
+const winston = __importStar(require("winston"));
+/**
+ * Redacts sensitive PII data from log objects.
+ * Covers common fields like email, phone, password, and resident numbers.
+ */
+const redactPii = winston.format((info) => {
+    const piiFields = ['email', 'phone', 'password', 'phoneNumber', 'address', 'residentNumber'];
+    const redact = (obj) => {
+        if (typeof obj !== 'object' || obj === null)
+            return obj;
+        const newObj = { ...obj };
+        for (const key in newObj) {
+            if (piiFields.includes(key)) {
+                newObj[key] = '[REDACTED]';
+            }
+            else if (typeof newObj[key] === 'object') {
+                newObj[key] = redact(newObj[key]);
+            }
+        }
+        return newObj;
+    };
+    const redactedInfo = redact(info);
+    return redactedInfo;
+});
+exports.loggerConfig = {
+    transports: [
+        new winston.transports.Console({
+            format: winston.format.combine(winston.format.timestamp(), redactPii(), // Apply PII redaction
+            winston.format.json()),
+        }),
+        // Separate file for Security Audit Logs
+        new winston.transports.File({
+            filename: 'logs/audit.log',
+            level: 'info',
+            format: winston.format.combine(winston.format.timestamp(), redactPii(), winston.format.json()),
+        }),
+    ],
+};

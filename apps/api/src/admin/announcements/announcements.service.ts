@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { db } from '@repo/db'; // Assuming db connection is exported here
-import { announcements } from '@repo/db/src/schema';
+import { db, announcements } from '@repo/db';
 import { eq } from 'drizzle-orm';
 
 @Injectable()
