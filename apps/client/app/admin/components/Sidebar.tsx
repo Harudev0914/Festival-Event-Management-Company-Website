@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { LayoutDashboard, Users, MessageSquare, Image, Package, HelpCircle, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [
     { name: '대시보드', icon: LayoutDashboard, path: '/admin/dashboard' },
@@ -15,6 +15,7 @@ export default function Sidebar() {
   ];
 
   return (
+    // Updated width to be dynamic, full expansion allowed.
     <div className={`h-screen bg-[#1a1a1a] text-[#dddedf] transition-all duration-300 border-r border-[#333] ${isOpen ? 'w-64' : 'w-20'}`}>
       <div className="p-6 flex items-center justify-between">
         <span className={`font-bold text-lg text-white ${!isOpen && 'hidden'}`}>Klipse Admin</span>
