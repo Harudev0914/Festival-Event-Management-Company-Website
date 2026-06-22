@@ -14,7 +14,6 @@ export default function Footer() {
         {/* Logo */}
         <div className="text-center">
             <a href="/" className="text-xl md:text-2xl font-display leading-tight font-bold text-white uppercase tracking-tighter hover:text-[#c84d4b] transition-colors">Klipse</a>
-            <p className="text-sm text-zinc-500 mt-1 uppercase tracking-widest">G-DRAGON 2025 WORLD TOUR</p>
         </div>
 
         {/* Social Icons (Instagram) */}
@@ -43,7 +42,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-xs text-zinc-600 mt-4 text-center">
-            &copy; 2026 GALAXY Corporation. Co., Ltd. All Rights Reserved.
+            &copy; 2026 Klipse. All Rights Reserved.
         </div>
       </div>
     </footer>

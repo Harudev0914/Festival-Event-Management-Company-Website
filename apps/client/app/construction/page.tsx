@@ -29,8 +29,8 @@ export default function ConstructionPage() {
         
         {/* Header */}
         <div className="space-y-2">
-            <h3 className="text-[#c84d4b] font-bold text-sm uppercase">Klipse Partnership</h3>
-            <h1 className="text-4xl md:text-5xl font-bold">최대 지원 혜택을 확인해 보세요!</h1>
+            <h3 className="text-[#c84d4b] font-bold text-sm uppercase">CONSTRUCTION</h3>
+            <h1 className="text-4xl md:text-5xl font-bold">최고의 기술로 완성하는 무대 시공</h1>
         </div>
 
         {/* Calendar (Hidden when range selected) */}
