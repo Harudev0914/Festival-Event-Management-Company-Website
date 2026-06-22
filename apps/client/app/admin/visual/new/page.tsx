@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Sidebar from "../../components/Sidebar";
-import ProtectedRoute from "../../../components/ProtectedRoute";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function NewVisualPage() {
   const [formData, setFormData] = useState({
