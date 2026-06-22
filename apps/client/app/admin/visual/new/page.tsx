@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../../components/Sidebar";
 import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function NewVisualPage() {
