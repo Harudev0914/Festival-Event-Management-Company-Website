@@ -25,7 +25,11 @@ export default function NewVisualPage() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error('Failed to save');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Server error:', errorData);
+        throw new Error('Failed to save');
+      }
 
       alert('새 비주얼이 추가되었습니다.');
       window.location.href = '/admin/visual';
@@ -42,6 +46,13 @@ export default function NewVisualPage() {
     ) : (
       <input type="text" placeholder={placeholder} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black outline-none" value={value} onChange={e => setValue(e.target.value)} />
     );
+  };
+
+  // Map user-friendly font names to CSS font-family
+  const fontMap: Record<string, string> = {
+    'sans-serif': 'sans-serif',
+    'serif': 'serif',
+    'monospace': 'monospace'
   };
 
   return (
@@ -69,13 +80,13 @@ export default function NewVisualPage() {
 
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 space-y-2 text-center">
                   <p className="text-zinc-300 font-bold tracking-[0.2em] uppercase text-[10px]">{formData.detailContent}</p>
-                  <h1 className="text-2xl font-bold tracking-tighter uppercase text-white drop-shadow-md" style={{ fontFamily: formData.detailFont }}>{formData.title}</h1>
+                  <h1 className="text-2xl font-bold tracking-tighter uppercase text-white drop-shadow-md" style={{ fontFamily: fontMap[formData.detailFont] || formData.detailFont }}>{formData.title}</h1>
                   {formData.useTimestamp && <div className="text-white text-sm font-bold">D-DAY: {formData.timestampDate}</div>}
                 </div>
               </div>
             </div>
 
-            {/* Configuration Form Section */}
+            {/* Configuration Form */}
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
               <h1 className="text-2xl font-bold mb-8 text-gray-900">메인비주얼 설정</h1>
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -92,7 +103,6 @@ export default function NewVisualPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Background */}
                   <div className="space-y-2">
                     <label className="block font-semibold text-gray-700">배경 설정</label>
                     <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.backgroundType} onChange={e => setFormData({...formData, backgroundType: e.target.value as any, backgroundValue: ''})}>
@@ -101,10 +111,9 @@ export default function NewVisualPage() {
                       <option value="video_file">영상 (File)</option>
                       <option value="video_url">영상 (URL)</option>
                     </select>
-                    {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력 (영상은 유튜브 ID)")}
+                    {renderValueInput(formData.backgroundType, formData.backgroundValue, (val) => setFormData({...formData, backgroundValue: val}), "경로 또는 URL 입력")}
                   </div>
 
-                  {/* DJ Image */}
                   <div className="space-y-2">
                     <label className="block font-semibold text-gray-700">DJ 프로필 설정</label>
                     <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.djImageType} onChange={e => setFormData({...formData, djImageType: e.target.value as any, djImageValue: ''})}>
@@ -117,26 +126,13 @@ export default function NewVisualPage() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="block font-semibold text-gray-700">상세 내용 폰트</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.detailFont} onChange={e => setFormData({...formData, detailFont: e.target.value})}>
-                      <option value="sans-serif">Sans-serif</option>
-                      <option value="serif">Serif</option>
-                      <option value="monospace">Monospace</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Timestamp */}
-                <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" className="w-5 h-5" checked={formData.useTimestamp} onChange={e => setFormData({...formData, useTimestamp: e.target.checked})} />
-                    <span className="font-semibold text-gray-700">타임스탬프 기능 사용</span>
-                  </label>
-                  {formData.useTimestamp && (
-                    <input type="date" className="w-full p-3 border border-gray-300 rounded-lg" value={formData.timestampDate} onChange={e => setFormData({...formData, timestampDate: e.target.value})} />
-                  )}
+                <div className="space-y-2">
+                  <label className="block font-semibold text-gray-700">상세 내용 폰트</label>
+                  <select className="w-full p-3 border border-gray-300 rounded-lg bg-white" value={formData.detailFont} onChange={e => setFormData({...formData, detailFont: e.target.value})}>
+                    <option value="sans-serif">Sans-serif</option>
+                    <option value="serif">Serif</option>
+                    <option value="monospace">Monospace</option>
+                  </select>
                 </div>
 
                 <button type="submit" className="w-full px-6 py-4 bg-black text-white rounded-lg font-bold text-lg hover:bg-gray-800 transition">등록 완료</button>
