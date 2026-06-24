@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle2, ChevronDown } from "lucide-react";
 
 interface Question {
@@ -14,7 +14,7 @@ interface Question {
 export default function ConstructionPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [submitted, setSubmitted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,11 +26,11 @@ export default function ConstructionPage() {
       .catch(err => console.error('Failed to fetch questions:', err));
   }, []);
 
-  const updateAnswer = (questionId: string, val: any) => {
+  const updateAnswer = (questionId: string, val: string | string[]) => {
     setError(null);
     setAnswers(prev => ({ ...prev, [questionId]: val }));
   };
-  
+
   const validateStep = (): boolean => {
     const q = questions[step];
     if (!q) return true;
