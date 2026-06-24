@@ -7,8 +7,22 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
+  // Config files (Node environment)
   {
-    files: ['**/*.{ts,tsx,js,jsx}'],
+    files: ['**/*.js'],
+    ignores: ['src/**/*.{ts,tsx,js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    }
+  },
+  // Source files (Browser/React environment)
+  {
+    files: ['src/**/*.{ts,tsx,js,jsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,

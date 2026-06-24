@@ -14,7 +14,7 @@ interface Question {
 }
 
 export default function ConstructionSettingsPage() {
-  const [questions, setQuestions] = useState<Question[]>([
+  const [questions] = useState<Question[]>([
     { id: 1, order: 1, title: "현재 운영 상태를 알려주세요.", type: "radio", options: ["신규 창업 예정입니다.", "현재 영업 중입니다.", "리뉴얼(인테리어) 예정입니다.", "기존 음향을 교체하고 싶습니다."] },
     { id: 2, order: 2, title: "지역을 선택해주세요.", type: "dropdown", options: ["서울", "경기", "인천", "부산", "대구", "대전", "광주", "울산", "세종", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"] },
   ]);

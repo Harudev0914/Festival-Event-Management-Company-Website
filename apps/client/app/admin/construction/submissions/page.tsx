@@ -10,7 +10,7 @@ interface Submission {
 }
 
 export default function ConstructionSubmissionsPage() {
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [submissions] = useState<Submission[]>([]);
 
   useEffect(() => {
     // 실제 API 호출 로직으로 교체 필요
