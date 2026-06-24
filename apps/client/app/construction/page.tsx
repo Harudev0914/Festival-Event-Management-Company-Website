@@ -130,7 +130,7 @@ export default function ConstructionPage() {
               const isSelected = val?.includes(opt);
               return (
                 <button key={opt} type="button" onClick={() => {
-                  const current = val || [];
+                  const current = (Array.isArray(val) ? val : []) as string[];
                   updateAnswer(q._id, isSelected ? current.filter((s: string) => s !== opt) : [...current, opt]);
                 }} className={`p-4 text-left border rounded-sm ${isSelected ? 'border-[#c84d4b] bg-[#c84d4b]/10' : 'border-zinc-800'}`}>
                   {opt}
