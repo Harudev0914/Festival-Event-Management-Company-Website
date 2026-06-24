@@ -1,7 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from "react";
-import { Check, CheckCircle2, ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle2, ChevronDown } from "lucide-react";
 
 interface Question {
   _id: string;
@@ -19,7 +18,6 @@ export default function ConstructionPage() {
   const [submitted, setSubmitted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch('/api/construction/questions')
@@ -74,7 +72,7 @@ export default function ConstructionPage() {
         preferredSchedule: answers[questions.find(q => q.title.includes('일정'))?._id || ''],
         budget: answers[questions.find(q => q.title.includes('예산'))?._id || ''],
       },
-      attachedFiles: [] // File upload handling would be added here
+      attachedFiles: [] 
     };
 
     try {
