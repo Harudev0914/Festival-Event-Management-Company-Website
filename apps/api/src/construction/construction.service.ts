@@ -17,7 +17,31 @@ export class ConstructionService {
   }
 
   async createConsultation(data: any) {
-    const consultation = new Consultation(data);
+    // Map dynamic form data to structured Consultation schema
+    const consultationData = {
+      customer: {
+        name: data.contactName,
+        phone: data.contactPhone,
+        email: data.contactEmail,
+        companyName: data.contactCompany
+      },
+      operatingStatus: data.answers['operatingStatus'],
+      region: data.answers['region'],
+      spaceType: data.answers['spaceType'],
+      spaceSize: data.answers['spaceSize'],
+      ceilingHeight: data.answers['ceilingHeight'],
+      musicPurposes: data.answers['musicPurposes'],
+      desiredSound: data.answers['desiredSound'],
+      desiredEquipment: data.answers['desiredEquipment'],
+      equipmentStatus: data.answers['equipmentStatus'],
+      interiorStage: data.answers['interiorStage'],
+      preferredSchedule: data.answers['preferredSchedule'],
+      budget: data.answers['budget'],
+      additionalNotes: data.additionalNotes,
+      attachedFiles: data.attachedFiles || []
+    };
+
+    const consultation = new Consultation(consultationData);
     return await consultation.save();
   }
 
