@@ -52,9 +52,44 @@ export default function ConstructionPage() {
   const handlePrevStep = () => { setError(null); if (step > 0) setStep(prev => prev - 1); };
 
   const handleSubmit = async () => {
-    // Basic implementation for submission
-    console.log("Submitting:", answers);
-    setSubmitted(true);
+    // Map internal answers to the structure expected by the backend
+    const submissionData = {
+      contactName: answers['contactName'],
+      contactPhone: answers['contactPhone'],
+      contactEmail: answers['contactEmail'],
+      contactCompany: answers['contactCompany'],
+      additionalNotes: answers['additionalNotes'],
+      answers: {
+        operatingStatus: answers[questions.find(q => q.title.includes('운영 상태'))?._id || ''],
+        region: answers[questions.find(q => q.title.includes('지역'))?._id || ''],
+        spaceType: answers[questions.find(q => q.title.includes('공간'))?._id || ''],
+        spaceSize: answers[questions.find(q => q.title.includes('규모'))?._id || ''],
+        ceilingHeight: answers[questions.find(q => q.title.includes('높이'))?._id || ''],
+        musicPurposes: answers[questions.find(q => q.title.includes('목적'))?._id || []],
+        desiredSound: answers[questions.find(q => q.title.includes('사운드'))?._id || ''],
+        desiredEquipment: answers[questions.find(q => q.title.includes('장비'))?._id || []],
+        equipmentStatus: answers[questions.find(q => q.title.includes('보유'))?._id || ''],
+        interiorStage: answers[questions.find(q => q.title.includes('인테리어'))?._id || ''],
+        preferredSchedule: answers[questions.find(q => q.title.includes('일정'))?._id || ''],
+        budget: answers[questions.find(q => q.title.includes('예산'))?._id || ''],
+      },
+      attachedFiles: [] // File upload handling would be added here
+    };
+
+    try {
+      const response = await fetch('/api/construction/consultations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) throw new Error('Submission failed');
+      
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Submission error:', err);
+      setError("신청 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   const renderQuestion = () => {

@@ -3,18 +3,23 @@ import { useState, useEffect } from "react";
 import AdminLayout from "../../components/AdminLayout";
 
 interface Submission {
-  contactName: string;
-  contactPhone: string;
+  _id: string;
+  customer: {
+    name: string;
+    phone: string;
+  };
   createdAt: string;
   status: string;
 }
 
 export default function ConstructionSubmissionsPage() {
-  const [submissions] = useState<Submission[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
 
   useEffect(() => {
-    // 실제 API 호출 로직으로 교체 필요
-    // fetch('/api/construction/admin/list').then(res => res.json()).then(setSubmissions);
+    fetch('/api/construction/admin/list')
+      .then(res => res.json())
+      .then(data => setSubmissions(data))
+      .catch(err => console.error('Failed to fetch submissions:', err));
   }, []);
 
   return (
@@ -32,12 +37,14 @@ export default function ConstructionSubmissionsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800">
-              {submissions.map((s, i) => (
-                <tr key={i} className="hover:bg-zinc-800/50">
-                  <td className="p-4">{s.contactName}</td>
-                  <td className="p-4">{s.contactPhone}</td>
+              {submissions.map((s) => (
+                <tr key={s._id} className="hover:bg-zinc-800/50">
+                  <td className="p-4">{s.customer.name}</td>
+                  <td className="p-4">{s.customer.phone}</td>
                   <td className="p-4">{new Date(s.createdAt).toLocaleDateString()}</td>
-                  <td className="p-4">{s.status}</td>
+                  <td className="p-4">
+                    <span className="px-2 py-1 bg-zinc-700 rounded text-xs">{s.status}</span>
+                  </td>
                 </tr>
               ))}
             </tbody>
