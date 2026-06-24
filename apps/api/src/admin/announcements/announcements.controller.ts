@@ -21,11 +21,11 @@ export class AnnouncementsController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() data: any) {
-    return this.announcementsService.update(parseInt(id), data);
+    return this.announcementsService.update(id, data);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.announcementsService.delete(parseInt(id));
+    return this.announcementsService.delete(id);
   }
 }

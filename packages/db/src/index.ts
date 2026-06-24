@@ -9,3 +9,5 @@ export const db = drizzle(client, { schema });
 
 export * from './schema';
 export { default as connectDB } from './mongodb';
+export * from './models/announcement.model';
+export * from './models/construction.model';

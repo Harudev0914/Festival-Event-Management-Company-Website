@@ -1,25 +1,27 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "../../components/AdminLayout";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 
-// Mock Data Type
+// Updated Data Type to match Mongoose model
 interface Question {
-  id: number;
+  _id: string;
   order: number;
   title: string;
-  subText?: string;
   type: string;
   options: string[];
 }
 
 export default function ConstructionSettingsPage() {
-  const [questions] = useState<Question[]>([
-    { id: 1, order: 1, title: "현재 운영 상태를 알려주세요.", type: "radio", options: ["신규 창업 예정입니다.", "현재 영업 중입니다.", "리뉴얼(인테리어) 예정입니다.", "기존 음향을 교체하고 싶습니다."] },
-    { id: 2, order: 2, title: "지역을 선택해주세요.", type: "dropdown", options: ["서울", "경기", "인천", "부산", "대구", "대전", "광주", "울산", "세종", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"] },
-  ]);
-
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+
+  useEffect(() => {
+    fetch('/api/construction/questions')
+      .then(res => res.json())
+      .then(data => setQuestions(data))
+      .catch(err => console.error('Failed to fetch questions:', err));
+  }, []);
 
   return (
     <AdminLayout title="시공 질문 설정">
@@ -33,7 +35,7 @@ export default function ConstructionSettingsPage() {
 
         <div className="space-y-4">
           {questions.sort((a, b) => a.order - b.order).map((q) => (
-            <div key={q.id} className="border border-zinc-200 rounded-lg p-6 flex flex-col gap-4 shadow-sm">
+            <div key={q._id} className="border border-zinc-200 rounded-lg p-6 flex flex-col gap-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <GripVertical className="text-zinc-300 cursor-grab" />
@@ -70,7 +72,6 @@ export default function ConstructionSettingsPage() {
                     <option value="radio">라디오 (단일 선택)</option>
                     <option value="checkbox">체크박스 (복수 선택)</option>
                     <option value="dropdown">드롭다운</option>
-                    <option value="grid">그리드 (아이콘형)</option>
                     <option value="text">자유 입력</option>
                 </select>
                 <div className="space-y-2">

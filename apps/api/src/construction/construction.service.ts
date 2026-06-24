@@ -1,33 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { db } from '@repo/db';
-import { constructionConsultations, constructionQuestions } from '@repo/db/schema';
-import { eq } from 'drizzle-orm';
+import { Question, Consultation } from '@repo/db';
 
 @Injectable()
 export class ConstructionService {
-  async createConsultation(data: any) {
-    return await db.insert(constructionConsultations).values({
-      contactName: data.contactName,
-      contactPhone: data.contactPhone,
-      contactEmail: data.contactEmail,
-      companyName: data.companyName,
-      answers: JSON.stringify(data.answers),
-    });
-  }
-
-  async getAllConsultations() {
-    return await db.select().from(constructionConsultations).orderBy(constructionConsultations.createdAt);
-  }
-
   async getQuestions() {
-    return await db.select().from(constructionQuestions).orderBy(constructionQuestions.order);
+    return await Question.find({}).sort({ order: 1 });
   }
 
   async createQuestion(data: any) {
-    return await db.insert(constructionQuestions).values(data);
+    const question = new Question(data);
+    return await question.save();
   }
 
   async updateQuestion(data: any) {
-    return await db.update(constructionQuestions).set(data).where(eq(constructionQuestions.id, data.id));
+    return await Question.findByIdAndUpdate(data.id, data, { new: true });
+  }
+
+  async createConsultation(data: any) {
+    const consultation = new Consultation(data);
+    return await consultation.save();
+  }
+
+  async getAllConsultations() {
+    return await Consultation.find({}).sort({ createdAt: -1 });
   }
 }

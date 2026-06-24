@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { db, announcements } from '@repo/db';
-import { eq } from 'drizzle-orm';
+import { Announcement } from '@repo/db';
 
 @Injectable()
 export class AnnouncementsService {
   async findAll() {
-    return await db.select().from(announcements);
+    return await Announcement.find({}).sort({ createdAt: -1 });
   }
 
-  async create(data: typeof announcements.$inferInsert) {
-    return await db.insert(announcements).values(data);
+  async create(data: any) {
+    const announcement = new Announcement(data);
+    return await announcement.save();
   }
 
-  async update(id: number, data: typeof announcements.$inferInsert) {
-    return await db.update(announcements).set(data).where(eq(announcements.id, id));
+  async update(id: string, data: any) {
+    return await Announcement.findByIdAndUpdate(id, data, { new: true });
   }
 
-  async delete(id: number) {
-    return await db.delete(announcements).where(eq(announcements.id, id));
+  async delete(id: string) {
+    return await Announcement.findByIdAndDelete(id);
   }
 }

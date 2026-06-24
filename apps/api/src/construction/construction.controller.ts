@@ -22,6 +22,11 @@ export class ConstructionController {
     return await this.constructionService.updateQuestion(questionData);
   }
 
+  @Post('consultations')
+  async createConsultation(@Body() consultationData: any) {
+    return await this.constructionService.createConsultation(consultationData);
+  }
+
   @Get('admin/list')
   @UseGuards(RolesGuard)
   @Roles('admin')
