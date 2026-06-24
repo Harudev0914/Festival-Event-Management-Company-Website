@@ -9,6 +9,7 @@ interface Question {
   title: string;
   type: 'radio' | 'dropdown' | 'checkbox' | 'text';
   options: string[];
+  isRequired: boolean;
 }
 
 export default function ConstructionPage() {
