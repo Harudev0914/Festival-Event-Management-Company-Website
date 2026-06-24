@@ -7,20 +7,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
-  // Config files (Node environment)
-  {
-    files: ['**/*.js'],
-    ignores: ['src/**/*.{ts,tsx,js,jsx}'],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-    },
-    rules: {
-      '@typescript-eslint/no-require-imports': 'off',
-    }
-  },
-  // Source files (Browser/React environment)
+  // Source files configuration
   {
     files: ['src/**/*.{ts,tsx,js,jsx}'],
     extends: [
@@ -30,12 +17,18 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node, // Allows 'require', 'exports'
+      },
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
       },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off', // Allows 'require'
     },
   },
 ])
