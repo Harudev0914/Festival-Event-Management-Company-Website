@@ -92,10 +92,10 @@ export default function ConstructionPage() {
         
         return (
           <button key={val} type="button" onClick={() => {
-            if (multi) {
-              const current = (data[key] as string[]) || [];
-              updateData(key, isSelected ? current.filter((s: string) => s !== val) : [...current, val] as any);
-            } else updateData(key, val as any);
+          if (multi) {
+            const current = (data[key] as string[]) || [];
+            updateData(key, (isSelected ? current.filter((s: string) => s !== val) : [...current, val]) as FormData[typeof key]);
+          } else updateData(key, val as FormData[typeof key]);
           }} className={`p-4 text-left border rounded-sm flex justify-between items-center ${isSelected ? 'border-[#c84d4b] bg-[#c84d4b]/10' : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-600'}`}>
             <span className="text-sm">{typeof opt === 'object' ? `${opt.emoji} ${opt.label}` : opt}</span>
             {isSelected && <Check size={16} className="text-[#c84d4b]" />}

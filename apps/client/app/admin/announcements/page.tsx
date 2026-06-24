@@ -2,8 +2,14 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from "../components/AdminLayout";
 
+interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+}
+
 export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
   useEffect(() => {
     fetch('/api/admin/announcements')
@@ -22,7 +28,7 @@ export default function AnnouncementsPage() {
           </button>
         </div>
         <div className="space-y-4">
-          {announcements.map((a: any) => (
+          {announcements.map((a: Announcement) => (
             <div key={a.id} className="p-4 bg-white rounded-xl border border-gray-100 flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-gray-900">{a.title}</h3>
