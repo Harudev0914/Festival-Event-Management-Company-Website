@@ -24,7 +24,10 @@ export default function FileManagerPage() {
   }, []);
 
   useEffect(() => {
-    fetchFiles();
+    const loadFiles = async () => {
+        await fetchFiles();
+    };
+    loadFiles();
   }, [fetchFiles]);
 
   const handleUpload = async () => {

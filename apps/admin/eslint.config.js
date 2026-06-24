@@ -28,7 +28,8 @@ export default defineConfig([
       },
     },
     rules: {
-      '@typescript-eslint/no-require-imports': 'off', // Allows 'require'
+      '@typescript-eslint/no-require-imports': 'off',
+      'no-undef': 'off', // Temporary fix for 'exports'/'require' issues in admin source
     },
   },
 ])

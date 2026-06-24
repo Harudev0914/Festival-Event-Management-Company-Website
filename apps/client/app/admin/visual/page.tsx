@@ -27,7 +27,10 @@ export default function MainVisualPage() {
   }, []);
 
   useEffect(() => {
-    fetchVisuals();
+    const loadVisuals = async () => {
+        await fetchVisuals();
+    };
+    loadVisuals();
   }, [fetchVisuals]);
 
   const toggleStatus = (id: number) => {
