@@ -10,7 +10,7 @@
     "dev:client": "npm run dev -w apps/client",
     "dev:admin": "npm run dev -w apps/admin",
     "dev": "concurrently -c \"yellow,blue,magenta\" --names \"BACKEND,CLIENT,ADMIN\" --handle-input \"npm run dev:api\" \"npm run dev:client\" \"npm run dev:admin\"",
-    "build": "npm run build --workspaces",
+    "build": "npm run build -w packages/common && npm run build -w packages/db && npm run build -w packages/ui && npm run build -w apps/api && npm run build -w apps/admin && npm run build -w apps/client"
     "lint": "npm run lint --workspaces"
   },
   "overrides": {
