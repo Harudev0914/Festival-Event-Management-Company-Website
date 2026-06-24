@@ -2,15 +2,21 @@
 import { useState, useEffect } from 'react';
 import Sidebar from "../components/Sidebar";
 import ProtectedRoute from "../components/ProtectedRoute";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+interface DashboardStats {
+  users: number;
+  events: number;
+  revenue: number;
+}
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState({ users: 0, events: 0, revenue: 0 });
+  const [stats, setStats] = useState<DashboardStats>({ users: 0, events: 0, revenue: 0 });
 
   useEffect(() => {
     fetch('/api/admin/dashboard/stats')
       .then(res => res.json())
-      .then(data => setStats(data))
+      .then((data: DashboardStats) => setStats(data))
       .catch(err => console.error('Failed to fetch stats:', err));
   }, []);
 

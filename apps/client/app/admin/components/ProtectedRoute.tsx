@@ -11,7 +11,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     if (auth !== 'true') {
       router.push('/admin');
     } else {
-      setIsAuthenticated(true);
+      setTimeout(() => setIsAuthenticated(true), 0);
     }
   }, [router]);
 

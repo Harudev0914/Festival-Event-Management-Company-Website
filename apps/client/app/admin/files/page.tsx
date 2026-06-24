@@ -1,24 +1,31 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AdminLayout from "../components/AdminLayout";
+
+interface FileAsset {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileUrl: string;
+}
 
 export default function FileManagerPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<FileAsset[]>([]);
 
-  const fetchFiles = async () => {
+  const fetchFiles = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/files');
-      const data = await res.json();
+      const data: FileAsset[] = await res.json();
       setFiles(data);
     } catch (err) {
       console.error('Failed to fetch files:', err);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchFiles();
-  }, []);
+  }, [fetchFiles]);
 
   const handleUpload = async () => {
     if (!file) return;
@@ -58,7 +65,7 @@ export default function FileManagerPage() {
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h2 className="text-lg font-bold text-gray-900 mb-6">파일 목록</h2>
         <div className="space-y-2">
-          {files.map((f: any) => (
+          {files.map((f: FileAsset) => (
             <div key={f.id} className="p-4 rounded-xl border border-gray-100 flex justify-between items-center hover:bg-gray-50">
               <span className="font-medium text-gray-900">{f.fileName}</span>
               <span className="text-sm text-gray-500">{f.fileType}</span>

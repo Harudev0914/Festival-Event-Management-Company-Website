@@ -2,21 +2,29 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
 
+interface Question {
+  id: number;
+  order: number;
+  title: string;
+  type: string;
+}
+
 export default function ConstructionSettingsPage() {
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
     // API 호출로 질문 데이터 로드 (예정)
     // fetch('/api/construction/questions').then(...)
-    setQuestions([
+    const initialData: Question[] = [
       { id: 1, order: 1, title: "공간 유형", type: "grid" },
       { id: 2, order: 2, title: "운영 상태", type: "radio" },
       // ... 14단계 데이터
-    ]);
+    ];
+    setTimeout(() => setQuestions(initialData), 0);
   }, []);
 
   return (
-    <AdminLayout>
+    <AdminLayout title="상담 신청 질문 설정">
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">상담 신청 질문 설정</h1>
         <div className="bg-zinc-900 p-6 rounded-md">

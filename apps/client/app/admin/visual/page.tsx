@@ -1,21 +1,36 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Sidebar from "../components/Sidebar";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { Edit2, Trash2 } from 'lucide-react';
 
-export default function MainVisualPage() {
-  const [visuals, setVisuals] = useState([]);
+interface Visual {
+  id: number;
+  title: string;
+  deadline: string;
+  regDate: string;
+  useTimestamp: boolean;
+  status: boolean;
+}
 
-  useEffect(() => {
-    fetch('/api/admin/visual')
-      .then(res => res.json())
-      .then(data => setVisuals(data))
-      .catch(err => console.error('Failed to fetch visuals:', err));
+export default function MainVisualPage() {
+  const [visuals, setVisuals] = useState<Visual[]>([]);
+
+  const fetchVisuals = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/visual');
+      const data: Visual[] = await res.json();
+      setVisuals(data);
+    } catch (err) {
+      console.error('Failed to fetch visuals:', err);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchVisuals();
+  }, [fetchVisuals]);
+
   const toggleStatus = (id: number) => {
-    // In a real implementation, this would call the API to update status
     setVisuals(prev => prev.map(v => v.id === id ? { ...v, status: !v.status } : v));
   };
 
@@ -46,7 +61,7 @@ export default function MainVisualPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {visuals.map((visual: any) => (
+                {visuals.map((visual: Visual) => (
                   <tr key={visual.id} className="hover:bg-gray-50">
                     <td className="p-4 text-gray-700">{visual.id}</td>
                     <td className="p-4 font-medium text-gray-900">{visual.title}</td>
@@ -69,7 +84,6 @@ export default function MainVisualPage() {
                       <button 
                         onClick={() => {
                           if (confirm(`${visual.title}을(를) 정말 삭제하시겠습니까?`)) {
-                            // In a real implementation, this would call the API to delete
                             setVisuals(prev => prev.filter(v => v.id !== visual.id));
                           }
                         }}

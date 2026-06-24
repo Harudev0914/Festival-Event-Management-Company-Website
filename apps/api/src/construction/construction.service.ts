@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { db } from '../../../packages/db/src';
+import { db } from '../../../packages/db/src/index';
 import { constructionConsultations, constructionQuestions } from '../../../packages/db/src/schema';
 import { eq } from 'drizzle-orm';
 

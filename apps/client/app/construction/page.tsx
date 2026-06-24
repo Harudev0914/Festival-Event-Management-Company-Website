@@ -1,6 +1,6 @@
 'use client';
 import { useState, useRef } from "react";
-import { Check, ChevronRight, ChevronLeft, MapPin, Upload, X, CheckCircle2, FileText, ChevronDown } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Options as defined in requirements
@@ -17,17 +17,39 @@ const INTERIOR_OPTIONS = ["공사 시작 전", "공사 진행 중", "거의 완�
 const SCHEDULE_OPTIONS = ["최대한 빠르게", "1개월 이내", "2~3개월", "일정 미정"];
 const BUDGET_OPTIONS = ["100만원 이하", "100~300만원", "300~500만원", "500~1,000만원", "1,000~3,000만원", "3,000만원 이상", "전문가 상담 후 결정"];
 
+interface FormData {
+  selectedStatus?: string;
+  selectedRegion?: string;
+  selectedSpace?: string;
+  customSpaceInput?: string;
+  selectedScale?: string;
+  selectedHeight?: string;
+  selectedPurposes: string[];
+  selectedSound?: string;
+  selectedEquipments: string[];
+  currentEquipment?: string;
+  interiorStage?: string;
+  desiredSchedule?: string;
+  expectedBudget?: string;
+  additionalNotes?: string;
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  contactCompany?: string;
+  uploadedFiles: File[];
+}
+
 export default function ConstructionPage() {
   const [step, setStep] = useState(1);
-  const [data, setData] = useState<any>({ selectedPurposes: [], selectedEquipments: [], uploadedFiles: [] });
+  const [data, setData] = useState<FormData>({ selectedPurposes: [], selectedEquipments: [], uploadedFiles: [] });
   const [submitted, setSubmitted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const updateData = (key: string, val: any) => {
+  const updateData = <K extends keyof FormData>(key: K, val: FormData[K]) => {
     setError(null);
-    setData((prev: any) => ({ ...prev, [key]: val }));
+    setData((prev) => ({ ...prev, [key]: val }));
   };
   
   const validateStep = (): boolean => {
@@ -37,9 +59,9 @@ export default function ConstructionPage() {
       case 3: return !!data.selectedSpace && (data.selectedSpace !== "기타" || !!data.customSpaceInput);
       case 4: return !!data.selectedScale;
       case 5: return !!data.selectedHeight;
-      case 6: return data.selectedPurposes?.length > 0;
+      case 6: return data.selectedPurposes.length > 0;
       case 7: return !!data.selectedSound;
-      case 8: return data.selectedEquipments?.length > 0;
+      case 8: return data.selectedEquipments.length > 0;
       case 9: return !!data.currentEquipment;
       case 10: return !!data.interiorStage;
       case 11: return !!data.desiredSchedule;
@@ -60,17 +82,20 @@ export default function ConstructionPage() {
   };
   const handlePrevStep = () => { setError(null); if (step > 1) setStep(prev => prev - 1); };
 
-  const renderGrid = (options: any[], key: string, multi = false) => (
+  const renderGrid = (options: (string | {label: string, emoji: string})[], key: keyof FormData, multi = false) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {options.map((opt) => {
         const val = typeof opt === 'string' ? opt : opt.label;
-        const isSelected = multi ? data[key]?.includes(val) : data[key] === val;
+        const isSelected = multi 
+          ? (data[key] as string[])?.includes(val) 
+          : data[key] === val;
+        
         return (
-          <button key={val} onClick={() => {
+          <button key={val} type="button" onClick={() => {
             if (multi) {
-              const current = data[key] || [];
-              updateData(key, isSelected ? current.filter((s: string) => s !== val) : [...current, val]);
-            } else updateData(key, val);
+              const current = (data[key] as string[]) || [];
+              updateData(key, isSelected ? current.filter((s: string) => s !== val) : [...current, val] as any);
+            } else updateData(key, val as any);
           }} className={`p-4 text-left border rounded-sm flex justify-between items-center ${isSelected ? 'border-[#c84d4b] bg-[#c84d4b]/10' : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-600'}`}>
             <span className="text-sm">{typeof opt === 'object' ? `${opt.emoji} ${opt.label}` : opt}</span>
             {isSelected && <Check size={16} className="text-[#c84d4b]" />}
@@ -88,6 +113,7 @@ export default function ConstructionPage() {
           <h2 className="text-xl font-bold">2. 지역은?</h2>
           <div className="relative">
             <motion.button 
+              type="button"
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
               onClick={() => setDropdownOpen(!dropdownOpen)} 
@@ -109,6 +135,7 @@ export default function ConstructionPage() {
                   {REGION_OPTIONS.map(r => (
                     <button 
                       key={r} 
+                      type="button"
                       onClick={() => {updateData('selectedRegion', r); setDropdownOpen(false)}} 
                       className={`p-3 text-xs rounded-sm transition ${data.selectedRegion === r ? 'bg-[#c84d4b] text-white' : 'hover:bg-zinc-800 text-zinc-400 hover:text-white'}`}
                     >
@@ -131,18 +158,18 @@ export default function ConstructionPage() {
       case 10: return <div className="space-y-4"><h2 className="text-xl font-bold">10. 인테리어 공사는 어느 단계인가요?</h2>{renderGrid(INTERIOR_OPTIONS, 'interiorStage')}</div>;
       case 11: return <div className="space-y-4"><h2 className="text-xl font-bold">11. 시공 희망 일정</h2>{renderGrid(SCHEDULE_OPTIONS, 'desiredSchedule')}</div>;
       case 12: return <div className="space-y-4"><h2 className="text-xl font-bold">12. 예상 예산을 알려주세요.</h2>{renderGrid(BUDGET_OPTIONS, 'expectedBudget')}</div>;
-      case 13: return <div className="space-y-4"><h2 className="text-xl font-bold">13. 추가로 원하시는 사항이 있으신가요?</h2><textarea className="w-full bg-zinc-900 border border-zinc-800 p-4 h-32" value={data.additionalNotes} onChange={e => updateData('additionalNotes', e.target.value)} /></div>;
+      case 13: return <div className="space-y-4"><h2 className="text-xl font-bold">13. 추가로 원하시는 사항이 있으신가요?</h2><textarea className="w-full bg-zinc-900 border border-zinc-800 p-4 h-32" value={data.additionalNotes || ''} onChange={e => updateData('additionalNotes', e.target.value)} /></div>;
       case 14: return (
         <div className="space-y-6">
           <h2 className="text-xl font-bold">14. 무료 음향 컨설팅 신청</h2>
           <div className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-zinc-400">성함 (필수)</label>
-              <input className={`w-full bg-zinc-900 border ${error && !data.contactName ? 'border-red-500' : 'border-zinc-800'} p-4`} placeholder="홍길동" value={data.contactName} onChange={e => updateData('contactName', e.target.value)}/>
+              <input className={`w-full bg-zinc-900 border ${error && !data.contactName ? 'border-red-500' : 'border-zinc-800'} p-4`} placeholder="홍길동" value={data.contactName || ''} onChange={e => updateData('contactName', e.target.value)}/>
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-zinc-400">연락처 (필수)</label>
-              <input className={`w-full bg-zinc-900 border ${error && (!data.contactPhone || !/^010-\d{3,4}-\d{4}$/.test(data.contactPhone)) ? 'border-red-500' : 'border-zinc-800'} p-4`} placeholder="010-0000-0000" value={data.contactPhone} onChange={e => updateData('contactPhone', e.target.value)}/>
+              <input className={`w-full bg-zinc-900 border ${error && (!data.contactPhone || !/^010-\d{3,4}-\d{4}$/.test(data.contactPhone)) ? 'border-red-500' : 'border-zinc-800'} p-4`} placeholder="010-0000-0000" value={data.contactPhone || ''} onChange={e => updateData('contactPhone', e.target.value)}/>
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-zinc-400">이메일 (선택)</label>
@@ -177,8 +204,8 @@ export default function ConstructionPage() {
             {renderStep()}
             {error && <p className="text-[#c84d4b] text-sm font-bold text-center animate-pulse">{error}</p>}
             <div className="flex justify-between pt-8 border-t border-zinc-800">
-              <button onClick={handlePrevStep} disabled={step === 1} className="px-6 py-3 bg-zinc-900 border border-zinc-800 disabled:opacity-50">이전</button>
-              <button onClick={step === 14 ? () => setSubmitted(true) : handleNextStep} className="px-6 py-3 bg-[#c84d4b]">{step === 14 ? "상담 신청하기" : "다음"}</button>
+              <button type="button" onClick={handlePrevStep} disabled={step === 1} className="px-6 py-3 bg-zinc-900 border border-zinc-800 disabled:opacity-50">이전</button>
+              <button type="button" onClick={step === 14 ? () => setSubmitted(true) : handleNextStep} className="px-6 py-3 bg-[#c84d4b]">{step === 14 ? "상담 신청하기" : "다음"}</button>
             </div>
           </>
         ) : (

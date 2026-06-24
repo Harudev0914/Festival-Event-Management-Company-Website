@@ -2,8 +2,15 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "../../components/AdminLayout";
 
+interface Submission {
+  contactName: string;
+  contactPhone: string;
+  createdAt: string;
+  status: string;
+}
+
 export default function ConstructionSubmissionsPage() {
-  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
 
   useEffect(() => {
     // 실제 API 호출 로직으로 교체 필요
@@ -11,7 +18,7 @@ export default function ConstructionSubmissionsPage() {
   }, []);
 
   return (
-    <AdminLayout>
+    <AdminLayout title="상담 신청 내역">
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">상담 신청 내역</h1>
         <div className="bg-zinc-900 border border-zinc-800 rounded-sm">

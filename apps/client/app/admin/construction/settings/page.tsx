@@ -22,7 +22,7 @@ export default function ConstructionSettingsPage() {
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
 
   return (
-    <AdminLayout>
+    <AdminLayout title="시공 질문 설정">
       <main className="w-full h-full bg-white p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold text-zinc-900">시공 질문 설정</h1>
