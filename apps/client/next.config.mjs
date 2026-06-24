@@ -11,7 +11,7 @@ const nextConfig = {
     unoptimized: true,
   },
   transpilePackages: ["@repo/ui", "@repo/common"],
-  async rewrites() {
+  rewrites: isProd ? undefined : async () => {
     return [
       {
         source: '/api/:path*',
