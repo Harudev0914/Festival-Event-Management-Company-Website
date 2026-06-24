@@ -122,3 +122,27 @@ export const fileAssets = pgTable("file_assets", {
   size: integer("size").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// 13. Construction Consultations Table
+export const constructionConsultations = pgTable("construction_consultations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  clientId: uuid("client_id").references(() => users.id),
+  contactName: text("contact_name").notNull(),
+  contactPhone: varchar("contact_phone", { length: 20 }).notNull(),
+  contactEmail: varchar("email", { length: 255 }),
+  companyName: text("company_name"),
+  answers: text("answers"), // JSON structure for all answers
+  status: eventStatusEnum("status").default("pending"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// 14. Construction Questions Table (Admin-managed)
+export const constructionQuestions = pgTable("construction_questions", {
+  id: serial("id").primaryKey(),
+  order: integer("order").notNull(),
+  title: text("title").notNull(),
+  type: varchar("type", { length: 50 }).notNull(),
+  options: text("options"), // JSON string
+  isRequired: boolean("is_required").default(true),
+  isActive: boolean("is_active").default(true),
+});

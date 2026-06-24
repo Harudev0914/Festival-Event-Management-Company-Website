@@ -17,6 +17,7 @@ import { FilesModule } from './admin/files/files.module';
 import { DashboardModule } from './admin/dashboard/dashboard.module';
 import { UsersModule } from './admin/users/users.module';
 import { VisualModule } from './admin/visual/visual.module';
+import { ConstructionModule } from './construction/construction.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { VisualModule } from './admin/visual/visual.module';
     DashboardModule,
     UsersModule,
     VisualModule,
+    ConstructionModule,
     // 1. Structured Logging with PII Redaction
     WinstonModule.forRoot(loggerConfig),
     // 2. Rate Limiting

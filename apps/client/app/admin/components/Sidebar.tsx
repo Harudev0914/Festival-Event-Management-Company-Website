@@ -14,10 +14,9 @@ export default function Sidebar() {
     { name: '대시보드', icon: LayoutDashboard, path: '/admin/dashboard' },
     { name: '회원 관리', icon: Users, path: '/admin/users' },
     {
-      name: '문의 관리', icon: MessageSquare, hasSub: true, subItems: [
-        { name: '시공 문의', path: '/admin/inquiries/construction' },
-        { name: '렌탈 문의', path: '/admin/inquiries/rental' },
-        { name: 'DJ 문의', path: '/admin/inquiries/dj' },
+      name: '시공 관리', icon: MessageSquare, hasSub: true, subItems: [
+        { name: '상담 신청 내역', path: '/admin/construction/submissions' },
+        { name: '질문 설정', path: '/admin/construction/settings' },
       ]
     },
     { name: '메인비주얼 관리', icon: Image, path: '/admin/visual' },

@@ -1,199 +1,127 @@
 'use client';
 import { useState } from "react";
-import { Search, ChevronRight } from "lucide-react";
+import { Search, ShoppingCart } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  desc: string;
-  manufacturer: string;
-  category: string;
-}
+const CATEGORIES = ["CPU", "쿨러/튜닝", "메인보드", "메모리", "그래픽카드", "SSD", "HDD", "케이스", "파워", "소프트웨어"];
 
-interface CartItem extends Product {
-  quantity: number;
-}
-
-const DJ_PRODUCTS: Product[] = [
-  { id: 1, name: "Pioneer DJ CDJ-3000", price: 3200000, desc: "Professional DJ Multi Player", manufacturer: "Pioneer DJ", category: "CDJ" },
-  { id: 2, name: "Pioneer DJ DJM-A9", price: 3500000, desc: "4-channel Professional DJ Mixer", manufacturer: "Pioneer DJ", category: "Mixer" },
-  { id: 3, name: "Technics SL-1200MK7", price: 1200000, desc: "Direct Drive Turntable", manufacturer: "Technics", category: "Turntable" },
+const PRODUCTS = [
+  { id: 1, name: "AMD 라이젠7-5세대 7800X3D (라파엘) (멀티팩 정품)", price: 441280, desc: "AMD(소켓AM5)/8코어/16스레드/메모리 규격:DDR5/탑재/5세대(Zen4)/5nm/기본:4.2GHz/...", category: "CPU" },
+  { id: 2, name: "인텔 코어 울트라7 시리즈2 270K Plus (애로우레이크 리프레시) (정품)", price: 534730, desc: "인텔(소켓1851)/P8+E12코어/24스레드/메모리 규격:DDR5/탑재/TSMC 3nm/기본:3.7GHz/...", category: "CPU" },
 ];
 
-const DJ_CATEGORIES = Array.from(new Set(DJ_PRODUCTS.map(p => p.category)));
-
 export default function RentalPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [cart, setCart] = useState<Record<string, CartItem[]>>({});
-  const [currentPage, setCurrentPage] = useState(1);
+  const [activeCategory, setActiveCategory] = useState("CPU");
+  const [showFilters, setShowFilters] = useState(false);
 
-  const filteredProducts = DJ_PRODUCTS.filter(p => 
-    (searchTerm === "" || p.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedFilters.length === 0 || selectedFilters.includes(p.category))
-  );
-
-  const toggleFilter = (cat: string) => {
-    setSelectedFilters(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
-  };
-
-  const addToCart = (product: Product) => {
-    setCart(prev => {
-      const categoryItems = prev[product.category] || [];
-      const existingItem = categoryItems.find(item => item.id === product.id);
-      
-      if (existingItem) {
-        return { ...prev, [product.category]: categoryItems.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item) };
-      }
-      return { ...prev, [product.category]: [...categoryItems, { ...product, quantity: 1 }] };
-    });
-  };
-
-  const updateQuantity = (category: string, productId: number, delta: number) => {
-    setCart(prev => ({
-        ...prev,
-        [category]: prev[category].map(item => item.id === productId ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item)
-    }));
-  };
-
-  const removeItem = (category: string, productId: number) => {
-    setCart(prev => ({ ...prev, [category]: prev[category].filter(item => item.id !== productId) }));
-  };
+  // 현재 카테고리에 맞는 상품만 필터링
+  const filteredProducts = PRODUCTS.filter(p => p.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 pt-24">
-      <div className="max-w-7xl mx-auto my-12 space-y-12">
+    <div className="min-h-screen bg-white text-zinc-900 pt-20">
+      {/* Container - Grid를 사용하여 메인과 사이드바 비율 고정 */}
+      <div className="w-full mx-auto grid grid-cols-[1fr,auto] gap-0">
         
-        {/* Ad Section */}
-        <div className="bg-gradient-to-r from-[#c84d4b] to-zinc-900 p-8 rounded-lg text-center border border-[#c84d4b]">
-            <h2 className="text-3xl font-bold mb-2">특별 프로모션</h2>
-            <p className="text-zinc-300">지금 DJ 장비를 렌탈하고 페스티벌 무대를 준비하세요!</p>
+        {/* Main Content Area */}
+        <div className="min-w-0 border-r border-zinc-200">
+          {/* Search */}
+          <div className="relative border-b-2 border-red-600">
+            <input type="text" placeholder="상품명을 입력하세요." className="w-full p-4 outline-none text-sm" />
+            <button className="absolute right-0 top-0 h-[52px] w-[52px] bg-red-600 text-white flex items-center justify-center"><Search size={24}/></button>
+          </div>
+
+          {/* New Filter Button */}
+          <div className="p-4 border-b border-zinc-200">
+            <button onClick={() => setShowFilters(true)} className="w-full py-2 bg-zinc-100 hover:bg-zinc-200 font-bold text-sm">상세 설정</button>
+          </div>
+
+          {/* Product List */}
+          <div>
+            <div className="flex text-sm font-bold border-b border-zinc-200 bg-zinc-50">
+              {['인기상품순', '신상순', '낮은가격순'].map(t => <button key={t} className="p-4 border-r border-zinc-200 text-zinc-600 hover:text-red-600">{t}</button>)}
+            </div>
+            {filteredProducts.map(p => (
+              <div key={p.id} className="p-4 border-b border-zinc-100 hover:bg-zinc-50/50 transition duration-200">
+                {/* Top Section: Image, Info, Action */}
+                <div className="flex gap-4 w-full">
+                  {/* Product Image */}
+                  <div className="w-20 h-20 bg-zinc-50 border border-zinc-200 rounded shrink-0 flex items-center justify-center text-zinc-300 text-[10px]">이미지</div>
+
+                  {/* Product Info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-sm text-zinc-900 hover:text-red-600 cursor-pointer transition line-clamp-2">
+                      {p.name}
+                    </h3>
+                    <p className="font-bold text-sm text-red-600 mt-2">{p.price.toLocaleString()}원</p>
+                  </div>
+
+                  {/* Action */}
+                  <div className="text-right shrink-0 w-12 flex flex-col items-center justify-center">
+                    <button className="p-2 border border-zinc-300 hover:bg-zinc-100 transition rounded">
+                      <ShoppingCart size={16} className="text-zinc-600" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Specs Section - Full width */}
+                <div className="bg-zinc-100 p-2 mt-3 rounded w-full">
+                  <p className="text-[11px] text-zinc-600 leading-relaxed truncate">{p.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-8">
-            {/* Left Area: Filters + Products */}
-            <div className="col-span-9 space-y-6">
-            <div className="relative">
-                <input 
-                type="text" 
-                placeholder="DJ 장비를 검색하세요." 
-                className="w-full bg-zinc-900 text-white p-4 pl-4 border border-zinc-700 rounded-md focus:border-[#c84d4b] focus:outline-none"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <Search className="absolute right-4 top-4 text-zinc-500" />
+        {/* Right Sidebar */}
+        <div className="w-24 lg:w-40 shrink-0">
+          <div className="border-t-0">
+            <div className="bg-zinc-800 text-white p-2 font-bold text-[10px] text-center">PC 주요구성</div>
+            <div className="flex flex-col">
+              {CATEGORIES.map(cat => (
+                <button 
+                  key={cat} 
+                  onClick={() => setActiveCategory(cat)}
+                  className={`w-full h-10 border-b border-zinc-200 text-[10px] font-bold flex items-center justify-center ${activeCategory === cat ? 'bg-red-600 text-white' : 'hover:bg-zinc-100'}`}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
-
-            <div className="bg-zinc-900 p-6 rounded-md border border-zinc-800 text-sm">
-                <div className="flex gap-4 items-start">
-                    <span className="font-bold text-zinc-400 mt-1">장비 분류:</span>
-                    <div className="flex gap-4 flex-wrap">
-                        {DJ_CATEGORIES.map(cat => (
-                            <label key={cat} className="flex items-center gap-2 cursor-pointer group">
-                                <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${selectedFilters.includes(cat) ? 'bg-[#c84d4b] border-[#c84d4b]' : 'border-zinc-600 group-hover:border-[#c84d4b]'}`}>
-                                    <input type="checkbox" className="hidden" checked={selectedFilters.includes(cat)} onChange={() => toggleFilter(cat)}/>
-                                    {selectedFilters.includes(cat) && <span className="text-white text-xs">✓</span>}
-                                </div>
-                                <span className="group-hover:text-[#c84d4b] transition">{cat}</span>
-                            </label>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            <div className="space-y-4">
-                {filteredProducts.map(p => (
-                <div key={p.id} className="flex justify-between items-center bg-zinc-900 p-6 rounded-md border border-zinc-800 hover:border-zinc-600 transition">
-                    <div>
-                    <h3 className="text-lg font-bold">{p.name}</h3>
-                    <p className="text-sm text-zinc-400">{p.desc}</p>
-                    </div>
-                    <div className="text-right">
-                    <p className="font-bold text-xl">{p.price.toLocaleString()}원</p>
-                    <button 
-                        onClick={() => addToCart(p)}
-                        className="bg-[#c84d4b] hover:bg-[#a63f3d] text-white px-4 py-2 mt-2 rounded transition flex items-center gap-1 font-medium"
-                    >
-                        담기 <ChevronRight size={16} />
-                    </button>
-                    </div>
-                </div>
-                ))}
-            </div>
-            
-            {/* Pagination */}
-            <div className="flex justify-center gap-2 mt-8">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(page => (
-                    <button 
-                        key={page} 
-                        onClick={() => setCurrentPage(page)}
-                        className={`w-10 h-10 border ${currentPage === page ? 'bg-[#c84d4b] border-[#c84d4b]' : 'bg-zinc-900 border-zinc-700'} hover:bg-zinc-800`}
-                    >
-                        {page}
-                    </button>
-                ))}
-                <button className="w-10 h-10 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800">{">"}</button>
-            </div>
-            </div>
-
-            {/* Right Area: Configurator */}
-            <div className="col-span-3">
-            <div className="bg-zinc-900 p-4 rounded-md border border-zinc-800 sticky top-24">
-                <h2 className="text-lg font-bold mb-4 border-b border-zinc-700 pb-2 text-white">렌탈 견적 구성</h2>
-                <div className="space-y-4 max-h-[50vh] overflow-y-auto">
-                {DJ_CATEGORIES.map(cat => (
-                    <div 
-                        key={cat} 
-                        className="border border-zinc-700 rounded overflow-hidden cursor-pointer"
-                        onClick={() => toggleFilter(cat)}
-                    >
-                        <div className={`p-2 text-sm font-bold text-white uppercase tracking-wider ${selectedFilters.includes(cat) ? 'bg-[#a63f3d]' : 'bg-[#c84d4b]'}`}>
-                            {cat}
-                        </div>
-                        {cart[cat]?.map(item => (
-                            <div key={item.id} className="p-3 border-b border-zinc-700 last:border-b-0">
-                                <div className="text-sm mb-2 text-white font-medium">{item.name}</div>
-                                <div className="flex justify-between items-center">
-                                    <div className="flex items-center border border-zinc-600 rounded">
-                                        <button onClick={() => updateQuantity(item.category, item.id, -1)} className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700">-</button>
-                                        <span className="px-3 text-sm font-bold">{item.quantity}</span>
-                                        <button onClick={() => updateQuantity(item.category, item.id, 1)} className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700">+</button>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-bold text-[#c84d4b]">{(item.price * item.quantity).toLocaleString()}원</span>
-                                        <button onClick={() => removeItem(item.category, item.id)} className="text-zinc-500 hover:text-[#c84d4b]">✕</button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ))}
-                </div>
-
-                {/* Sidebar Footer */}
-                <div className="mt-6 pt-4 border-t border-zinc-700">
-                    <div className="flex justify-between items-center mb-4 text-sm text-zinc-400">
-                        <span>총 {Object.values(cart).flat().reduce((sum, item) => sum + item.quantity, 0)}개 품목 선택</span>
-                        <button onClick={() => setCart({})} className="hover:text-white">전체삭제</button>
-                    </div>
-                    <div className="flex justify-between items-center mb-6">
-                        <span className="font-bold text-white">총 합계금액</span>
-                        <span className="text-2xl font-bold text-[#c84d4b]">{Object.values(cart).flat().reduce((sum, item) => sum + (item.price * item.quantity), 0).toLocaleString()}원</span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-2 mb-4">
-                        <button className="text-xs p-2 bg-[#c84d4b] hover:bg-[#a63f3d] text-white font-bold">구매하기</button>
-                    </div>
-                    <div className="grid grid-cols-5 gap-1">
-                        {['저장', '불러오기', '공유', '캡처', '신청'].map(label => (
-                            <button key={label} className="text-[10px] p-1 border border-zinc-700 hover:bg-zinc-800 text-zinc-400">{label}</button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-            </div>
+          </div>
         </div>
       </div>
+
+      {/* Filter Bottom Sheet with Framer Motion */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50" 
+            onClick={() => setShowFilters(false)}
+          >
+            <motion.div 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="w-full max-w-lg bg-white p-6 rounded-t-2xl md:rounded-lg shadow-2xl" 
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-6">
+                  <h3 className="font-bold text-lg">상세 설정</h3>
+                  <button onClick={() => setShowFilters(false)} className="text-zinc-500 hover:text-black">닫기</button>
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                <div><label className="font-bold text-zinc-700 text-xs">제조사</label><div className="mt-2"><input type="checkbox"/> 인텔 <input type="checkbox" className="ml-2"/> AMD</div></div>
+                <div><label className="font-bold text-zinc-700 text-xs">코어 수</label><select className="border w-full p-3 mt-2 rounded"><option>전체</option></select></div>
+              </div>
+              <button className="w-full mt-8 py-3 bg-red-600 text-white font-bold rounded shadow-lg hover:bg-red-700 transition" onClick={() => setShowFilters(false)}>적용하기</button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
